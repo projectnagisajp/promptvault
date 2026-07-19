@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PromptVault — AIプロンプト共有ライブラリ</title>
-  <meta name="description" content="厳選されたAIプロンプトを検索・コピーして、あなたのクリエイティブワークに活用しよう。" />
+  <title>PromptVault — AIプロンプト共有・検索ライブラリ</title>
+  <meta name="description" content="ChatGPT, Claude, Midjourney等で使える実用的なAIプロンプト100選。ワンクリックでコピー＆即実践！" />
+
+  <!-- ===== OGP (Open Graph Protocol) & SNS Meta Tags ===== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="PromptVault" />
+  <meta property="og:title" content="PromptVault — 厳選AIプロンプト共有・検索ライブラリ" />
+  <meta property="og:description" content="画像生成、テキスト執筆、プログラミング、ビジネスまで。100個の最先端AIプロンプトをワンクリックでコピー！" />
+  <meta property="og:url" content="https://projectnagisajp.github.io/promptvault/" />
+  <meta property="og:image" content="https://projectnagisajp.github.io/promptvault/ogp-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PromptVault — 厳選AIプロンプト100選" />
+  <meta name="twitter:description" content="ChatGPT, Claude, Midjourney等で使える実用的なAIプロンプト100選。ワンクリックコピー＆即実践！" />
+  <meta name="twitter:image" content="https://projectnagisajp.github.io/promptvault/ogp-image.jpg" />
+
+  <!-- ===== Google Analytics 4 (GA4) ===== -->
+  <!-- 注意: GA4測定ID（例: G-XXXXXXXXXX）を取得後、以下のG-XXXXXXXXXXを置き換えてください -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', { send_page_view: true });
+  </script>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,15 +54,6 @@
               700: '#3339d1',
               800: '#2b30a9',
               900: '#282e84',
-            },
-          },
-          animation: {
-            'slide-up': 'slideUp 0.4s ease-out forwards',
-          },
-          keyframes: {
-            slideUp: {
-              '0%':   { opacity: '0', transform: 'translateY(20px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' },
             },
           },
         },
@@ -132,6 +149,11 @@
       color: #c7d2fe;
       box-shadow: 0 0 12px rgba(85,104,245,0.2);
     }
+    .filter-btn.fav-btn.active {
+      background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(234,179,8,0.25));
+      border-color: rgba(245,158,11,0.6);
+      color: #fef08a;
+    }
 
     .prompt-card {
       background: var(--bg-card);
@@ -184,6 +206,8 @@
     .cat-biz   { background:rgba(245,158,11,0.15); color:#fcd34d; border:1px solid rgba(245,158,11,0.25); }
     .cat-idea  { background:rgba(139,92,246,0.15); color:#c4b5fd; border:1px solid rgba(139,92,246,0.25); }
     .cat-mkt   { background:rgba(239,68,68,0.15);  color:#fca5a5; border:1px solid rgba(239,68,68,0.25); }
+    .cat-edu   { background:rgba(20,184,166,0.15); color:#99f6e4; border:1px solid rgba(20,184,166,0.25); }
+    .cat-life  { background:rgba(168,85,247,0.15); color:#e9d5ff; border:1px solid rgba(168,85,247,0.25); }
     .cat-def   { background:rgba(100,116,139,0.15);color:#94a3b8; border:1px solid rgba(100,116,139,0.25); }
 
     .tag-chip {
@@ -243,6 +267,37 @@
       box-shadow: 0 0 16px rgba(16,185,129,0.35);
     }
 
+    .star-btn {
+      background: none;
+      border: none;
+      color: #475569;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    .star-btn:hover { color: #f59e0b; background: rgba(245,158,11,0.1); }
+    .star-btn.starred { color: #fbbf24; text-shadow: 0 0 10px rgba(251,191,36,0.5); }
+
+    .action-icon-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #94a3b8;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .action-icon-btn:hover {
+      background: rgba(255,255,255,0.1);
+      color: #e2e8f0;
+      border-color: rgba(255,255,255,0.2);
+    }
+
     .expand-btn {
       font-size: 0.75rem;
       color: #5568f5;
@@ -293,6 +348,12 @@
     }
     .toast-in  { animation: toastIn  0.3s ease forwards; }
     .toast-out { animation: toastOut 0.25s ease forwards; }
+
+    /* Modal Backdrop */
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+    }
   </style>
 </head>
 
@@ -315,63 +376,97 @@
         <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
-        <input id="search-input" type="text" placeholder="タイトル・タグ・プロンプト本文を検索..."
+        <input id="search-input" type="text" placeholder="タイトル・タグ・プロンプト本文を検索 (100選)..."
           class="search-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm" />
       </div>
     </div>
 
-    <span id="count-badge" class="text-xs text-slate-500 bg-slate-800/80 px-2.5 py-1 rounded-full font-mono hidden sm:block">— 件</span>
+    <!-- 右側アクションボタン群 -->
+    <div class="flex items-center gap-3">
+      <button id="open-submit-modal" class="hidden sm:flex items-center gap-1.5 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 text-xs font-semibold px-3 py-2 rounded-xl transition-all">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        投稿・リクエスト
+      </button>
+      <span id="count-badge" class="text-xs text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded-full font-mono font-medium">— 件</span>
+    </div>
   </div>
 
-  <!-- モバイル検索 -->
-  <div class="sm:hidden px-4 pb-3">
-    <div class="relative">
+  <!-- モバイル検索 & 投稿ボタン -->
+  <div class="sm:hidden px-4 pb-3 flex items-center gap-2">
+    <div class="relative flex-1">
       <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
       </svg>
       <input id="search-input-mobile" type="text" placeholder="検索..."
-        class="search-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm" />
+        class="search-input w-full pl-10 pr-4 py-2 rounded-xl text-sm" />
     </div>
+    <button id="open-submit-modal-mobile" class="bg-indigo-600/30 text-indigo-300 border border-indigo-500/40 text-xs font-semibold px-3 py-2 rounded-xl flex-shrink-0">
+      ＋ 投稿
+    </button>
   </div>
 </header>
 
 <!-- ===== HERO ===== -->
-<section class="hero-grid py-14 md:py-20">
+<section class="hero-grid py-12 md:py-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-    <div class="inline-flex items-center gap-2 text-xs font-medium bg-indigo-950/60 border border-indigo-800/40 text-indigo-300 px-3 py-1.5 rounded-full mb-6">
-      <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L9.5 9.5H2l6 4.5-2.5 7.5L12 17l6.5 4.5L16 14l6-4.5h-7.5L12 2z"/></svg>
-      AIプロンプトライブラリ
+    <div class="inline-flex items-center gap-2 text-xs font-medium bg-indigo-950/60 border border-indigo-800/40 text-indigo-300 px-3.5 py-1.5 rounded-full mb-6 shadow-lg shadow-indigo-950/50">
+      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L9.5 9.5H2l6 4.5-2.5 7.5L12 17l6.5 4.5L16 14l6-4.5h-7.5L12 2z"/></svg>
+      厳選 AIプロンプト 100選
     </div>
-    <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
-      最高の<span class="gradient-text">プロンプト</span>を<br class="hidden sm:block"/>ワンクリックで
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
+      最高の<span class="gradient-text">AIプロンプト</span>を<br class="hidden sm:block"/>ワンクリックでコピー
     </h1>
-    <p class="text-slate-400 text-lg max-w-xl mx-auto">
-      厳選されたAIプロンプトを検索・コピーして、あなたのクリエイティブワークを次のレベルへ。
+    <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-6">
+      画像生成、テキスト執筆、プログラム開発からビジネス仕事術まで。厳選された実用的なAIプロンプトを即実践！
     </p>
+
+    <!-- SNSシェアボタンバー -->
+    <div class="flex items-center justify-center gap-3 flex-wrap">
+      <button id="share-site-x" class="action-icon-btn">
+        <svg class="w-4 h-4 text-sky-400" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Xでシェア
+      </button>
+      <button id="share-site-line" class="action-icon-btn">
+        <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M19.34 10.04c0-3.72-3.83-6.74-8.54-6.74s-8.54 3.02-8.54 6.74c0 3.33 3.03 6.13 7.13 6.64.28.06.66.18.75.42.09.24.06.62.03.87l-.14.86c-.04.26-.2.99.87.54 1.07-.45 5.79-3.41 7.9-5.84 1.34-1.39 1.96-2.58 1.96-3.49z"/></svg>
+        LINEで送る
+      </button>
+      <button id="copy-site-link" class="action-icon-btn">
+        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+        URLコピー
+      </button>
+    </div>
   </div>
 </section>
 
 <!-- ===== FILTERS ===== -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
   <div class="stats-bar p-4 sm:p-5 flex flex-col gap-4">
+    <!-- カテゴリフィルター -->
     <div class="flex items-center gap-3 flex-wrap">
       <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex-shrink-0">カテゴリ</span>
       <div id="category-filters" class="flex flex-wrap gap-2"></div>
     </div>
+
+    <!-- タグフィルター & お気に入り -->
     <div class="flex items-center gap-3 flex-wrap">
       <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex-shrink-0">タグ</span>
       <div id="tag-filters" class="flex flex-wrap gap-2"></div>
     </div>
-    <div class="flex items-center justify-between pt-1 border-t border-white/5">
-      <div class="flex items-center gap-2">
+
+    <!-- ステータス ＆ リセット -->
+    <div class="flex items-center justify-between pt-2 border-t border-white/5 flex-wrap gap-2">
+      <div class="flex items-center gap-3">
         <span class="text-xs text-slate-500">表示:</span>
         <span id="result-count" class="text-xs font-semibold text-slate-300">読み込み中...</span>
+        <span id="fav-count-badge" class="text-xs font-medium text-amber-400/90 bg-amber-400/10 border border-amber-400/20 px-2.5 py-0.5 rounded-full">★ お気に入り 0件</span>
       </div>
       <button id="reset-btn" class="text-xs text-slate-500 hover:text-indigo-400 transition-colors flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg">
         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
         </svg>
-        フィルターをリセット
+        フィルターリセット
       </button>
     </div>
   </div>
@@ -386,8 +481,8 @@
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
         d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
     </svg>
-    <p class="text-slate-600 text-lg font-medium">プロンプトが見つかりません</p>
-    <p class="text-slate-700 text-sm mt-1">検索条件を変えてお試しください</p>
+    <p class="text-slate-500 text-lg font-medium">該当するプロンプトが見つかりません</p>
+    <p class="text-slate-600 text-sm mt-1">検索条件を変えるか、フィルターをリセットしてお試しください</p>
   </div>
 
   <div id="loading-state" class="empty-state">
@@ -396,16 +491,66 @@
       <div class="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style="animation-delay:0.15s"></div>
       <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0.3s"></div>
     </div>
-    <p class="text-slate-600 text-sm">プロンプトを読み込み中...</p>
+    <p class="text-slate-500 text-sm">100選プロンプトを読み込み中...</p>
   </div>
 </main>
+
+<!-- ===== SUBMIT/REQUEST MODAL DIALOG ===== -->
+<dialog id="submit-modal" class="rounded-2xl bg-slate-900 border border-slate-700 text-slate-200 p-6 max-w-lg w-full shadow-2xl">
+  <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+      <span class="text-indigo-400">✨</span> プロンプトの提案・リクエスト
+    </h3>
+    <button id="close-modal-btn" class="text-slate-500 hover:text-white text-xl p-1">✕</button>
+  </div>
+  <form id="submit-prompt-form" class="flex flex-col gap-4">
+    <div>
+      <label class="block text-xs font-semibold text-slate-400 mb-1">タイトル <span class="text-rose-400">*</span></label>
+      <input type="text" id="input-title" required placeholder="例: 爆速でブログ構成案を作るプロンプト"
+        class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" />
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-400 mb-1">カテゴリ <span class="text-rose-400">*</span></label>
+      <select id="input-category" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        <option value="画像生成">画像生成</option>
+        <option value="テキスト生成">テキスト生成</option>
+        <option value="プログラミング">プログラミング</option>
+        <option value="ビジネス">ビジネス</option>
+        <option value="企画・アイデア">企画・アイデア</option>
+        <option value="マーケティング">マーケティング</option>
+        <option value="学習・教育">学習・教育</option>
+        <option value="ライフハック">ライフハック</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-400 mb-1">プロンプト本文 <span class="text-rose-400">*</span></label>
+      <textarea id="input-prompt" required rows="4" placeholder="AIへの指示文を入力してください..."
+        class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
+    </div>
+
+    <div>
+      <label class="block text-xs font-semibold text-slate-400 mb-1">タグ（カンマ区切り）</label>
+      <input type="text" id="input-tags" placeholder="例: ブログ, SEO, ライティング"
+        class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" />
+    </div>
+
+    <div class="flex items-center justify-end gap-3 mt-2 border-t border-slate-800 pt-3">
+      <button type="button" id="cancel-modal-btn" class="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white">キャンセル</button>
+      <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-600/30 transition-all">
+        送信する
+      </button>
+    </div>
+  </form>
+</dialog>
 
 <!-- ===== TOAST ===== -->
 <div id="toast-container" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 pointer-events-none"></div>
 
 <!-- ===== FOOTER ===== -->
-<footer class="border-t border-white/5 py-8 text-center text-slate-600 text-sm">
-  <p>&#169; 2025 PromptVault &mdash; Built with &#10024; by Antigravity</p>
+<footer class="border-t border-white/5 py-8 text-center text-slate-500 text-sm">
+  <p>© 2026 PromptVault — Built with ✨ by Antigravity</p>
 </footer>
 
 <!-- ===== JAVASCRIPT ===== -->
@@ -421,6 +566,8 @@
     'ビジネス':     'cat-biz',
     '企画・アイデア':'cat-idea',
     'マーケティング':'cat-mkt',
+    '学習・教育':   'cat-edu',
+    'ライフハック': 'cat-life',
   };
   function getCatClass(c){ return CAT_CLASS[c]||'cat-def'; }
 
@@ -444,8 +591,10 @@
       } else {
         if(c==='"'){inQ=true;}
         else if(c===','){row.push(cur);cur='';}
-        else if(c==='\n'||(c==='\r'&&n==='\n')){
-          if(c==='\r')i++;
+        else if(c==='
+'||(c===''&&n==='
+')){
+          if(c==='')i++;
           row.push(cur);cur='';rows.push(row);row=[];
         } else{cur+=c;}
       }
@@ -458,8 +607,20 @@
     });
   }
 
+  // LocalStorage お気に入り管理
+  const FAV_KEY = 'promptvault_favs_v1';
+  function getFavorites() {
+    try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || '[]')); }
+    catch { return new Set(); }
+  }
+  function saveFavorites(favSet) {
+    localStorage.setItem(FAV_KEY, JSON.stringify([...favSet]));
+    updateFavBadge();
+  }
+  const favorites = getFavorites();
+
   // 状態
-  let allPrompts=[],activeCategory=null,activeTags=new Set(),searchQuery='';
+  let allPrompts=[], activeCategory=null, activeTags=new Set(), searchQuery='', showOnlyFavs=false;
 
   // DOM
   const grid=document.getElementById('card-grid');
@@ -469,9 +630,15 @@
   const tagFiltersEl=document.getElementById('tag-filters');
   const resultCountEl=document.getElementById('result-count');
   const countBadgeEl=document.getElementById('count-badge');
+  const favCountBadgeEl=document.getElementById('fav-count-badge');
   const resetBtn=document.getElementById('reset-btn');
   const searchInput=document.getElementById('search-input');
   const searchMobile=document.getElementById('search-input-mobile');
+
+  function updateFavBadge() {
+    favCountBadgeEl.textContent = `★ お気に入り ${favorites.size}件`;
+  }
+  updateFavBadge();
 
   // フィルター構築
   function buildFilters(prompts){
@@ -479,10 +646,20 @@
     const tags=[...new Set(prompts.flatMap(p=>(p.Tags||'').split(',').map(t=>t.trim()).filter(Boolean)))];
 
     catFiltersEl.innerHTML='';
-    const allBtn=makeBtn('すべて',()=>{activeCategory=null;renderAll();setActiveBtn(catFiltersEl,allBtn);},true);
+    const allBtn=makeBtn('すべて',()=>{ activeCategory=null; showOnlyFavs=false; renderAll(); setActiveBtn(catFiltersEl,allBtn); }, true);
     catFiltersEl.appendChild(allBtn);
+
+    // ★ お気に入りフィルターボタン
+    const favBtn=makeBtn('★ お気に入りのみ', ()=>{
+      showOnlyFavs=!showOnlyFavs;
+      favBtn.classList.toggle('active', showOnlyFavs);
+      renderAll();
+    });
+    favBtn.classList.add('fav-btn');
+    catFiltersEl.appendChild(favBtn);
+
     cats.forEach(cat=>{
-      const btn=makeBtn(cat,()=>{activeCategory=cat;renderAll();setActiveBtn(catFiltersEl,btn);});
+      const btn=makeBtn(cat,()=>{ activeCategory=cat; showOnlyFavs=false; renderAll(); setActiveBtn(catFiltersEl,btn); });
       catFiltersEl.appendChild(btn);
     });
 
@@ -493,8 +670,8 @@
       btn.textContent='#'+tag;
       btn.dataset.tag=tag;
       btn.addEventListener('click',()=>{
-        if(activeTags.has(tag)){activeTags.delete(tag);btn.classList.remove('active');}
-        else{activeTags.add(tag);btn.classList.add('active');}
+        if(activeTags.has(tag)){ activeTags.delete(tag); btn.classList.remove('active'); }
+        else{ activeTags.add(tag); btn.classList.add('active'); }
         renderAll();
       });
       tagFiltersEl.appendChild(btn);
@@ -510,7 +687,7 @@
   }
 
   function setActiveBtn(parent,activeEl){
-    parent.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    parent.querySelectorAll('.filter-btn:not(.fav-btn)').forEach(b=>b.classList.remove('active'));
     activeEl.classList.add('active');
   }
 
@@ -522,7 +699,8 @@
       const mc=!activeCategory||p.Category===activeCategory;
       const pt=(p.Tags||'').split(',').map(t=>t.trim());
       const mt=activeTags.size===0||[...activeTags].every(t=>pt.includes(t));
-      return ms&&mc&&mt;
+      const mf=!showOnlyFavs || favorites.has(p.Title);
+      return ms&&mc&&mt&&mf;
     });
   }
 
@@ -530,20 +708,24 @@
   function createCard(p,idx){
     const card=document.createElement('article');
     card.className='prompt-card p-5 flex flex-col gap-3';
-    card.style.animationDelay=Math.min(idx*60,400)+'ms';
+    card.style.animationDelay=Math.min(idx*40,300)+'ms';
 
     const catCls=getCatClass(p.Category);
     const tags=(p.Tags||'').split(',').map(t=>t.trim()).filter(Boolean);
     const promptText=(p.Prompt||'').replace(/\\n/g,'\n');
+    const isFav = favorites.has(p.Title);
 
     const tagsHtml=tags.map(t=>`<span class="tag-chip" data-tag="${esc(t)}">#${esc(t)}</span>`).join('');
 
     card.innerHTML=`
       <div class="flex items-start justify-between gap-2">
         <span class="category-badge ${catCls}">${esc(p.Category||'不明')}</span>
-        <svg class="w-4 h-4 text-slate-700 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-        </svg>
+        <button class="star-btn ${isFav?'starred':''}" data-title="${esc(p.Title)}" title="${isFav?'お気に入りから削除':'お気に入りに追加'}">
+          <svg class="w-5 h-5" fill="${isFav?'currentColor':'none'}" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+          </svg>
+        </button>
       </div>
       <h2 class="text-white font-semibold text-base leading-snug">${esc(p.Title||'無題')}</h2>
       ${tags.length?`<div class="flex flex-wrap gap-1.5">${tagsHtml}</div>`:''}
@@ -554,8 +736,13 @@
       </div>
       <hr class="card-divider"/>
       <div class="flex items-center justify-between gap-2">
-        <span class="text-xs text-slate-600">${esc(p.Category||'')}</span>
-        <button class="copy-btn" data-prompt="${esc(promptText)}">
+        <div class="flex items-center gap-1.5">
+          <button class="action-icon-btn card-share-btn" data-title="${esc(p.Title)}" data-prompt="${esc(promptText)}">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 10-5.367-2.684 3 3 0 005.367 2.684zm0 9.316a3 3 0 10-5.368 2.684 3 3 0 005.368-2.684z"/></svg>
+            シェア
+          </button>
+        </div>
+        <button class="copy-btn" data-prompt="${esc(promptText)}" data-title="${esc(p.Title)}">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
           </svg>
@@ -571,14 +758,49 @@
       card.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
     });
 
+    // 星（お気に入り）ボタン
+    const starBtn = card.querySelector('.star-btn');
+    starBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const title = starBtn.dataset.title;
+      if (favorites.has(title)) {
+        favorites.delete(title);
+        starBtn.classList.remove('starred');
+        starBtn.querySelector('svg').setAttribute('fill', 'none');
+        showToast('☆ お気に入りから削除しました');
+      } else {
+        favorites.add(title);
+        starBtn.classList.add('starred');
+        starBtn.querySelector('svg').setAttribute('fill', 'currentColor');
+        showToast('★ お気に入りに追加しました！');
+        if (typeof gtag === 'function') gtag('event', 'favorite_prompt', { prompt_title: title });
+      }
+      saveFavorites(favorites);
+      if (showOnlyFavs) renderAll();
+    });
+
+    // カード個別シェア
+    const cardShareBtn = card.querySelector('.card-share-btn');
+    cardShareBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const title = cardShareBtn.dataset.title;
+      const text = `【AIプロンプト】${title} — PromptVault`;
+      const url = window.location.href;
+      const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+      window.open(xUrl, '_blank', 'width=600,height=400');
+      if (typeof gtag === 'function') gtag('event', 'share_prompt', { prompt_title: title });
+    });
+
     // コピーボタン
     const copyBtn=card.querySelector('.copy-btn');
     copyBtn.addEventListener('click',()=>{
       const txt=copyBtn.dataset.prompt;
+      const title=copyBtn.dataset.title;
       const doSuccess=()=>{
         copyBtn.classList.add('copied');
         copyBtn.innerHTML='<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> コピーしました';
         showToast('📋 プロンプトをコピーしました！');
+        if (typeof gtag === 'function') gtag('event', 'copy_prompt', { prompt_title: title });
         setTimeout(()=>{
           copyBtn.classList.remove('copied');
           copyBtn.innerHTML='<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/> </svg> コピーする';
@@ -668,15 +890,71 @@
 
   // リセット
   resetBtn.addEventListener('click',()=>{
-    activeCategory=null; activeTags.clear(); searchQuery='';
+    activeCategory=null; activeTags.clear(); searchQuery=''; showOnlyFavs=false;
     searchInput.value=''; searchMobile.value='';
     const allBtn=catFiltersEl.querySelector('.filter-btn');
     if(allBtn) setActiveBtn(catFiltersEl,allBtn);
+    catFiltersEl.querySelectorAll('.fav-btn').forEach(b=>b.classList.remove('active'));
     tagFiltersEl.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
     renderAll();
   });
 
-  // インライン CSV データ (file:// でも動作、HTTP 経由の fetch も試みる)
+  // サイト共有ボタン
+  document.getElementById('share-site-x').addEventListener('click', () => {
+    const text = 'PromptVault — ChatGPTやMidjourneyで使える厳選AIプロンプト100選！ワンクリックでコピー＆即実践';
+    const url = window.location.href;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+  });
+
+  document.getElementById('share-site-line').addEventListener('click', () => {
+    const url = window.location.href;
+    window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}`, '_blank');
+  });
+
+  document.getElementById('copy-site-link').addEventListener('click', () => {
+    const url = window.location.href;
+    if(navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => showToast('🔗 サイトURLをコピーしました！'));
+    } else {
+      fallbackCopy(url);
+      showToast('🔗 サイトURLをコピーしました！');
+    }
+  });
+
+  // 投稿モーダル管理
+  const submitModal = document.getElementById('submit-modal');
+  const openModalBtn = document.getElementById('open-submit-modal');
+  const openModalBtnMobile = document.getElementById('open-submit-modal-mobile');
+  const closeModalBtn = document.getElementById('close-modal-btn');
+  const cancelModalBtn = document.getElementById('cancel-modal-btn');
+  const submitForm = document.getElementById('submit-prompt-form');
+
+  function openModal() { submitModal.showModal(); }
+  function closeModal() { submitModal.close(); submitForm.reset(); }
+
+  openModalBtn.addEventListener('click', openModal);
+  openModalBtnMobile.addEventListener('click', openModal);
+  closeModalBtn.addEventListener('click', closeModal);
+  cancelModalBtn.addEventListener('click', closeModal);
+
+  submitForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = document.getElementById('input-title').value;
+    const cat = document.getElementById('input-category').value;
+    const prompt = document.getElementById('input-prompt').value;
+    const tags = document.getElementById('input-tags').value;
+
+    // 新規プロンプトを先頭に追加（ローカル反映）
+    const newP = { Title: title, Category: cat, Prompt: prompt, Tags: tags };
+    allPrompts.unshift(newP);
+
+    showToast('✨ プロンプトをご提案いただきありがとうございます！');
+    closeModal();
+    renderAll();
+    if (typeof gtag === 'function') gtag('event', 'submit_prompt', { prompt_title: title });
+  });
+
+  // CSV 読み込み
   const INLINE_CSV = `Title,Prompt,Category,Tags
 サイバーパンクな路地裏,"cyberpunk alleyway, neon lights, rainy, 8k resolution, highly detailed, cinematic lighting, octane render",画像生成,"風景, サイバーパンク, 夜, リアル"
 水彩画風の猫,"a cute fluffy cat, watercolor painting, soft pastel colors, dreamy atmosphere, white background, masterpiece",画像生成,"動物, 水彩, イラスト, かわいい"
@@ -831,14 +1109,12 @@ A/Bテストの検証仮説とバリエーション作成,"【現行のボタン
 目標達成のためのポモドーロ・テクニック作業設計,【今日終わらせたい大タスク】を、25分集中＋5分休憩の「ポモドーロ・テクニック」のコマ（ポモ）に細分化した作業スケジュールを作成してください。途中で集中が切れない工夫も教えてください。,ライフハック,"タイムマネジメント, ポモドーロ, 集中力, タスク管理"`;
 
   async function loadCSV(){
-    // まず fetch を試みる（HTTP サーバー経由の場合）
     try {
       const res=await fetch('./prompts.csv');
       if(!res.ok) throw new Error('HTTP '+res.status);
       const text=await res.text();
       allPrompts=parseCSV(text);
     } catch(err){
-      // fetch 失敗時はインラインデータを使用
       console.info('fetch failed, using inline data:', err.message);
       allPrompts=parseCSV(INLINE_CSV);
     }
