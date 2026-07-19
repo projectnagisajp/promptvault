@@ -1,0 +1,11 @@
+Title,Prompt,Category,Tags
+サイバーパンクな路地裏,"cyberpunk alleyway, neon lights, rainy, 8k resolution, highly detailed, cinematic lighting, octane render",画像生成,"風景, サイバーパンク, 夜, リアル"
+水彩画風の猫,"a cute fluffy cat, watercolor painting, soft pastel colors, dreamy atmosphere, white background, masterpiece",画像生成,"動物, 水彩, イラスト, かわいい"
+ブログ記事の構成案作成,"あなたはプロのWebライターです。以下のテーマについて、SEOを意識した読者の検索意図を満たすブログ記事の構成案（H2, H3見出し）を作成してください。ターゲット層：【ここにターゲット】 テーマ：【ここにテーマ】",テキスト生成,"ブログ, SEO, ライティング"
+コードのリファクタリング,"以下のコードをより可読性が高く、パフォーマンスの良いモダンなコードにリファクタリングしてください。また、変更点とその理由を初心者にもわかりやすく箇条書きで説明してください。対象コード：\n\n",プログラミング,"エンジニア, リファクタリング, コード解説"
+シズル感のある料理写真,"professional food photography, a delicious bowl of ramen, rich broth, steam rising, macro lens, soft studio lighting, 4k, photorealistic",画像生成,"料理, リアル, 写真, 飯テロ"
+ビジネス英語メールの添削,"以下の英文メールを、ビジネスシーン（クライアントへの謝罪と代替案の提示）に適した、丁寧かつプロフェッショナルで自然な表現に添削してください。添削前の英文：\n\n",ビジネス,"英語, メール, 添削, ビジネス"
+新規事業のアイデア壁打ち,"私は現在新しいWebサービスのアイデアを考えています。以下の【ターゲット層】と【課題】を元に、解決策となる斬新でマネタイズ可能なアイデアを5つ提案してください。それぞれに「サービス名」「概要」「想定される収益モデル」を含めてください。\nターゲット層：\n課題：",企画・アイデア,"壁打ち, ブレスト, 企画, 新規事業"
+レトロポップなポスター風,"retro pop art poster, 1980s style, vibrant colors, geometric shapes, bold typography, vector illustration, flat design",画像生成,"レトロ, ポップアート, デザイン, ベクター"
+SNS用の短文キャッチコピー,"以下の製品特徴を元に、X（旧Twitter）で拡散されやすい、思わずタップしたくなるようなキャッチコピーを3パターン（直球系、共感系、意外性系）作成してください。\n製品特徴：",マーケティング,"SNS, キャッチコピー, マーケティング"
+ファンタジーRPGの背景,"epic fantasy landscape, floating islands, majestic waterfalls, glowing crystals, ancient ruins, beautiful sunset, highly detailed, concept art, artstation",画像生成,"ファンタジー, 風景, コンセプトアート, 背景"
