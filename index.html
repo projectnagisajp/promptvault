@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PromptVault — AIプロンプト共有・検索ライブラリ</title>
-  <meta name="description" content="ChatGPT, Claude, Midjourney等で使える実用的なAIプロンプト100選。ワンクリックでコピー＆即実践！" />
+  <title>PromptVault — AIプロンプト共有・検索ライブラリ (100選)</title>
+  <meta name="description" content="ChatGPT, Claude, Midjourney等で使える実用的なAIプロンプト100選。ワンクリックでコピー＆人気ランキング順表示！" />
 
   <!-- ===== OGP (Open Graph Protocol) & SNS Meta Tags ===== -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="PromptVault" />
-  <meta property="og:title" content="PromptVault — 厳選AIプロンプト共有・検索ライブラリ" />
-  <meta property="og:description" content="画像生成、テキスト執筆、プログラミング、ビジネスまで。100個の最先端AIプロンプトをワンクリックでコピー！" />
+  <meta property="og:title" content="PromptVault — 厳選AIプロンプト100選ライブラリ" />
+  <meta property="og:description" content="画像生成、テキスト執筆、プログラミング、ビジネスまで。100個の最先端AIプロンプトをワンクリックコピー！" />
   <meta property="og:url" content="https://projectnagisajp.github.io/promptvault/" />
   <meta property="og:image" content="https://projectnagisajp.github.io/promptvault/ogp-image.jpg" />
   <meta property="og:image:width" content="1200" />
@@ -23,7 +23,6 @@
   <meta name="twitter:image" content="https://projectnagisajp.github.io/promptvault/ogp-image.jpg" />
 
   <!-- ===== Google Analytics 4 (GA4) ===== -->
-  <!-- 注意: GA4測定ID（例: G-XXXXXXXXXX）を取得後、以下のG-XXXXXXXXXXを置き換えてください -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -149,6 +148,11 @@
       color: #c7d2fe;
       box-shadow: 0 0 12px rgba(85,104,245,0.2);
     }
+    .filter-btn.rank-btn.active {
+      background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(245,158,11,0.25));
+      border-color: rgba(239,68,68,0.6);
+      color: #fca5a5;
+    }
     .filter-btn.fav-btn.active {
       background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(234,179,8,0.25));
       border-color: rgba(245,158,11,0.6);
@@ -162,15 +166,6 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    .prompt-card.visible {
-      animation: slideUp 0.4s ease-out forwards;
-    }
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
     }
     .prompt-card::before {
       content: '';
@@ -191,6 +186,21 @@
         inset 0 1px 0 rgba(255,255,255,0.06);
     }
     .prompt-card:hover::before { opacity: 1; }
+
+    /* ランキングバッジ */
+    .rank-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .rank-1 { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; box-shadow: 0 0 10px rgba(245,158,11,0.4); }
+    .rank-2 { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
+    .rank-3 { background: linear-gradient(135deg, #b45309, #78350f); color: #fff; }
+    .rank-other { background: rgba(255,255,255,0.08); color: #94a3b8; }
 
     .category-badge {
       font-size: 0.7rem;
@@ -349,7 +359,6 @@
     .toast-in  { animation: toastIn  0.3s ease forwards; }
     .toast-out { animation: toastOut 0.25s ease forwards; }
 
-    /* Modal Backdrop */
     dialog::backdrop {
       background: rgba(0, 0, 0, 0.75);
       backdrop-filter: blur(8px);
@@ -383,21 +392,21 @@
 
     <!-- 右側アクションボタン群 -->
     <div class="flex items-center gap-3">
-      <button id="open-submit-modal" class="hidden sm:flex items-center gap-1.5 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 text-xs font-semibold px-3 py-2 rounded-xl transition-all">
+      <button id="open-submit-modal" class="hidden sm:flex items-center gap-1.5 bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 text-xs font-semibold px-3.5 py-2 rounded-xl transition-all">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
         投稿・リクエスト
       </button>
-      <span id="count-badge" class="text-xs text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded-full font-mono font-medium">— 件</span>
+      <span id="count-badge" class="text-xs text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded-full font-mono font-medium">100 件</span>
     </div>
   </div>
 
-  <!-- モバイル検索 & 投稿ボタン -->
+  <!-- モバイル検索 -->
   <div class="sm:hidden px-4 pb-3 flex items-center gap-2">
     <div class="relative flex-1">
       <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 0114 0z"/>
       </svg>
       <input id="search-input-mobile" type="text" placeholder="検索..."
         class="search-input w-full pl-10 pr-4 py-2 rounded-xl text-sm" />
@@ -413,13 +422,13 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <div class="inline-flex items-center gap-2 text-xs font-medium bg-indigo-950/60 border border-indigo-800/40 text-indigo-300 px-3.5 py-1.5 rounded-full mb-6 shadow-lg shadow-indigo-950/50">
       <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L9.5 9.5H2l6 4.5-2.5 7.5L12 17l6.5 4.5L16 14l6-4.5h-7.5L12 2z"/></svg>
-      厳選 AIプロンプト 100選
+      厳選 AIプロンプト 100選 ＆ 人気ランキング
     </div>
     <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
       最高の<span class="gradient-text">AIプロンプト</span>を<br class="hidden sm:block"/>ワンクリックでコピー
     </h1>
     <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto mb-6">
-      画像生成、テキスト執筆、プログラム開発からビジネス仕事術まで。厳選された実用的なAIプロンプトを即実践！
+      画像生成、テキスト執筆、プログラム開発からビジネス仕事術まで。コピー数リアルタイムランキング順に並び替えも可能！
     </p>
 
     <!-- SNSシェアボタンバー -->
@@ -443,13 +452,13 @@
 <!-- ===== FILTERS ===== -->
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
   <div class="stats-bar p-4 sm:p-5 flex flex-col gap-4">
-    <!-- カテゴリフィルター -->
+    <!-- カテゴリ＆特別フィルター -->
     <div class="flex items-center gap-3 flex-wrap">
-      <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex-shrink-0">カテゴリ</span>
+      <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex-shrink-0">表示モード</span>
       <div id="category-filters" class="flex flex-wrap gap-2"></div>
     </div>
 
-    <!-- タグフィルター & お気に入り -->
+    <!-- タグフィルター -->
     <div class="flex items-center gap-3 flex-wrap">
       <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider flex-shrink-0">タグ</span>
       <div id="tag-filters" class="flex flex-wrap gap-2"></div>
@@ -458,8 +467,8 @@
     <!-- ステータス ＆ リセット -->
     <div class="flex items-center justify-between pt-2 border-t border-white/5 flex-wrap gap-2">
       <div class="flex items-center gap-3">
-        <span class="text-xs text-slate-500">表示:</span>
-        <span id="result-count" class="text-xs font-semibold text-slate-300">読み込み中...</span>
+        <span class="text-xs text-slate-500">表示件数:</span>
+        <span id="result-count" class="text-xs font-semibold text-slate-300">100件</span>
         <span id="fav-count-badge" class="text-xs font-medium text-amber-400/90 bg-amber-400/10 border border-amber-400/20 px-2.5 py-0.5 rounded-full">★ お気に入り 0件</span>
       </div>
       <button id="reset-btn" class="text-xs text-slate-500 hover:text-indigo-400 transition-colors flex items-center gap-1.5 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg">
@@ -483,15 +492,6 @@
     </svg>
     <p class="text-slate-500 text-lg font-medium">該当するプロンプトが見つかりません</p>
     <p class="text-slate-600 text-sm mt-1">検索条件を変えるか、フィルターをリセットしてお試しください</p>
-  </div>
-
-  <div id="loading-state" class="empty-state">
-    <div class="flex gap-2 mb-4">
-      <div class="w-3 h-3 bg-indigo-500 rounded-full animate-bounce" style="animation-delay:0s"></div>
-      <div class="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style="animation-delay:0.15s"></div>
-      <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay:0.3s"></div>
-    </div>
-    <p class="text-slate-500 text-sm">100選プロンプトを読み込み中...</p>
   </div>
 </main>
 
@@ -558,6 +558,34 @@
 (function () {
   'use strict';
 
+  // 全プロンプトのマスターインラインデータ (即時・エラーフリー)
+  const RAW_PROMPTS = [{"Title":"サイバーパンクな路地裏","Prompt":"cyberpunk alleyway, neon lights, rainy, 8k resolution, highly detailed, cinematic lighting, octane render","Category":"画像生成","Tags":"風景, サイバーパンク, 夜, リアル","CopyCount":342},{"Title":"水彩画風の猫","Prompt":"a cute fluffy cat, watercolor painting, soft pastel colors, dreamy atmosphere, white background, masterpiece","Category":"画像生成","Tags":"動物, 水彩, イラスト, かわいい","CopyCount":289},{"Title":"シズル感のある料理写真","Prompt":"professional food photography, a delicious bowl of ramen, rich broth, steam rising, macro lens, soft studio lighting, 4k, photorealistic","Category":"画像生成","Tags":"料理, リアル, 写真, 飯テロ","CopyCount":410},{"Title":"レトロポップなポスター風","Prompt":"retro pop art poster, 1980s style, vibrant colors, geometric shapes, bold typography, vector illustration, flat design","Category":"画像生成","Tags":"レトロ, ポップアート, デザイン, ベクター","CopyCount":195},{"Title":"ファンタジーRPGの背景","Prompt":"epic fantasy landscape, floating islands, majestic waterfalls, glowing crystals, ancient ruins, beautiful sunset, highly detailed, concept art, artstation","Category":"画像生成","Tags":"ファンタジー, 風景, コンセプトアート, 背景","CopyCount":312},{"Title":"ミニマリストの北欧風インテリア","Prompt":"modern Scandinavian living room design, minimalist furniture, warm sunlight streaming through large window, indoor plants, neutral color palette, architectural digest style","Category":"画像生成","Tags":"インテリア, デザイン, 建築, おしゃれ","CopyCount":156},{"Title":"近未来都市の空撮","Prompt":"aerial view of a futuristic eco-city, glass skyscrapers with hanging gardens, solar panel arrays, flying vehicles, golden hour lighting, hyperrealistic, 8k","Category":"画像生成","Tags":"SF, 都市, 建築, 未来","CopyCount":220},{"Title":"アニメ風の女子高生ポートレート","Prompt":"anime girl smiling under cherry blossoms, Makoto Shinkai style, vibrant sky, lens flare, detailed background, masterpiece, 4k","Category":"画像生成","Tags":"アニメ, キャラクター, 新海誠風, 桜","CopyCount":480},{"Title":"3Dクレイモデル風キャラクター","Prompt":"cute 3D claymation robot worker, smooth Pixar style, pastel colors, soft studio lighting, isometric view, blender render","Category":"画像生成","Tags":"3D, クレイアニメ, 3Dモデル, かわいい","CopyCount":178},{"Title":"幻想的な魔法の森","Prompt":"enchanted forest with bioluminescent giant mushrooms, floating fireflies, ancient mossy trees, mystical fog, magical ambient light, photorealistic","Category":"画像生成","Tags":"ファンタジー, 自然, 神秘的, 光","CopyCount":245},{"Title":"ラグジュアリー香水のプロダクト写真","Prompt":"luxury perfume bottle placed on smooth black marble stone, water splashes, dramatic moody lighting, gold accents, commercial product photography, 8k","Category":"画像生成","Tags":"製品写真, 広告, ラグジュアリー, コスメ","CopyCount":162},{"Title":"浮世絵風の宇宙飛行士","Prompt":"astronaut in deep space, ukiyo-e woodblock print style, Katsushika Hokusai influence, Japanese traditional wave patterns, vintage paper texture","Category":"画像生成","Tags":"和風, 浮世絵, 宇宙, アート","CopyCount":390},{"Title":"フラットWebアイコンセット","Prompt":"set of 9 modern flat vector icons for finance app, clean lines, rounded corners, gradient blue and orange color scheme, white isolated background","Category":"画像生成","Tags":"UI/UX, アイコン, ベクター, Webデザイン","CopyCount":215},{"Title":"ヴィンテージ車と海岸道路","Prompt":"classic 1960s convertible car driving along California coastal highway, sunset ocean view, film photography style, Kodak Portra 400 grain, warm nostalgic mood","Category":"画像生成","Tags":"車, ヴィンテージ, 風景, フィルム写真","CopyCount":140},{"Title":"水滴が跳ねるマクロ写真","Prompt":"extreme macro high-speed photograph of a single water droplet hitting dark liquid surface, perfect ripple ring, high clarity, dramatic lighting, 8k","Category":"画像生成","Tags":"マクロ写真, 水, アーティスティック, 高解像度","CopyCount":110},{"Title":"ブログ記事の構成案作成","Prompt":"あなたはプロのWebライターです。以下のテーマについて、SEOを意識した読者の検索意図を満たすブログ記事の構成案（H2, H3見出し）を作成してください。ターゲット層：【ここにターゲット】 テーマ：【ここにテーマ】","Category":"テキスト生成","Tags":"ブログ, SEO, ライティング","CopyCount":520},{"Title":"長文記事の要約（3行・箇条書き）","Prompt":"以下の文章を読み、重要なポイントを3つの簡潔な箇条書きにまとめてください。専門用語は避け、中学生でも理解できる平易な言葉を使用してください。\n\n対象テキスト：\n【ここに文章を貼り付け】","Category":"テキスト生成","Tags":"要約, 業務効率化, 文章作成","CopyCount":460},{"Title":"文章の校正・推敲","Prompt":"以下の文章の「誤字脱字の修正」「自然な日本語へのリライト」「論理展開のブラッシュアップ」を行ってください。変更した箇所と修正理由を表形式で示してください。\n\n対象テキスト：\n【ここに文章】","Category":"テキスト生成","Tags":"校正, 推敲, ライティング, 添削","CopyCount":385},{"Title":"ニュースレター・メルマガ執筆","Prompt":"【新商品/新サービス名】のローンチに関するメールマガジンを作成してください。読者が思わず開封したくなる件名案を3つ作成し、本文は「共感→課題提示→解決策（商品紹介）→行動喚起(CTA)」の構成にしてください。","Category":"テキスト生成","Tags":"メルマガ, ライティング, コピーライティング","CopyCount":290},{"Title":"説得力のあるスピーチ原稿作成","Prompt":"【テーマ/イベント名】における5分間のスピーチ原稿を作成してください。聴衆の心を揺さぶるようなストーリーテリングを取り入れ、冒頭の掴み・中盤の具体的エピソード・終盤のメッセージを強調してください。","Category":"テキスト生成","Tags":"スピーチ, 原稿, プレゼン, 執筆","CopyCount":175},{"Title":"プレスリリース原稿の作成","Prompt":"以下の情報を元に、メディア向けプレスリリースの標準フォーマットに沿った原稿を作成してください。新奇性・社会的価値が伝わる見出し、本文、会社概要欄を含めてください。\n\n製品名：\n発表内容：\nターゲット：\n価格・発売日：","Category":"テキスト生成","Tags":"広報, PR, プレスリリース, ビジネス","CopyCount":230},{"Title":"YouTube動画のスクリプト台本","Prompt":"【動画テーマ】についての10分間のYouTube解説動画の台本を作成してください。「オープニング（0〜30秒で離脱防止）」「本編（3つのポイント）」「エンディング（チャンネル登録誘導）」に分けて、セリフ形式で書いてください。","Category":"テキスト生成","Tags":"YouTube, 台本, 動画制作, スクリプト","CopyCount":310},{"Title":"小説・ストーリーのプロット生成","Prompt":"【ジャンル（例：SFファンタジー）】の短編小説のプロット案を作成してください。主人公の設定、世界観、起承転結の各章の要約、クライマックスの伏線とその回収方法を明記してください。","Category":"テキスト生成","Tags":"小説, ストーリー, 創作, アイデア","CopyCount":205},{"Title":"FAQ（よくある質問と回答）の作成","Prompt":"【サービス/商品名】に関して、ユーザーから寄せられそうな想定質問（FAQ）を10個作成し、親切かつ正確な回答文をセットで作成してください。","Category":"テキスト生成","Tags":"FAQ, カスタマーサポート, 執筆","CopyCount":270},{"Title":"インタビュー質問項目の策定","Prompt":"【インタビュイーの職種/人物像】に対する60分間のインタビュー質問シートを作成してください。アイスブレイクから始まり、キャリアの転機、成功体験、今後の展望まで深掘りできる階層的な質問（大質問・深掘り質問）を用意してください。","Category":"テキスト生成","Tags":"インタビュー, 質問案, 取材, 記事作成","CopyCount":160},{"Title":"難解な専門用語の解説文作成","Prompt":"「【専門用語】」という概念について、非エンジニアや初心者にも分かるように比喩表現（日常の例え話）を使って説明してください。解説レベルは小学生でもイメージできるレベルにしてください。","Category":"テキスト生成","Tags":"解説, 初心者向け, 比喩, 教育","CopyCount":340},{"Title":"自己PR・志望動機の作成","Prompt":"以下の経歴と強みを元に、採用担当者に強くアピールできる「自己PR文（約400文字）」を作成してください。具体エピソード・得られた成果・企業への貢献意欲を含めてください。\n\n職種：\n強み：\n過去のエピソード：","Category":"テキスト生成","Tags":"就活, 転職, 自己PR, キャリア","CopyCount":495},{"Title":"SNSプロフィール文の最適化","Prompt":"以下の実績と発信テーマを元に、フォロワーが増えやすいX（旧Twitter）のプロフィール文（160文字以内）を3パターン（実績アピール型・共感型・箇条書き型）作成してください。\n\n実績：\n発信ジャンル：","Category":"テキスト生成","Tags":"SNS, プロフィール, X, 自己紹介","CopyCount":430},{"Title":"本の要約と要点レビュー作成","Prompt":"書籍「【書籍タイトル】（著者：【著者名】）」の主要な教訓とアクションプランをまとめてください。本から学べる3つの重要コンセプトと、明日から実践できる具体的行動を提案してください。","Category":"テキスト生成","Tags":"読書メモ, 書評, 要約, 勉強","CopyCount":225},{"Title":"クレームへのお詫び返信メール","Prompt":"【発生したトラブルの内容】について、怒っているお客様に対する謝罪と今後の対応方針を伝える誠実なメール文章を作成してください。相手の心情への配慮、迅速な状況調査の約束、再発防止策を含めてください。","Category":"テキスト生成","Tags":"メール, 謝罪, カスタマー対応, ビジネス","CopyCount":315},{"Title":"コードのリファクタリング","Prompt":"以下のコードをより可読性が高く、パフォーマンスの良いモダンなコードにリファクタリングしてください。また、変更点とその理由を初心者にもわかりやすく箇条書きで説明してください。対象コード：\n\n","Category":"プログラミング","Tags":"エンジニア, リファクタリング, コード解説","CopyCount":610},{"Title":"エラーログの解読とデバッグ手順","Prompt":"以下のエラーログを分析し、何が原因で発生しているか、どのように修正すればよいかステップバイステップで解説してください。\n\nエラーログ：\n【ここにエラーログを貼り付け】","Category":"プログラミング","Tags":"デバッグ, エラー, 開発, エンジニア","CopyCount":580},{"Title":"Web APIエンドポイントの設計","Prompt":"【システム/機能名（例: ユーザー管理機能）】に必要なRESTful APIのエンドポイント一覧を設計してください。HTTPメソッド、パス、リクエストボディ（JSON）、レスポンス例、ステータスコードをまとめて表形式で示してください。","Category":"プログラミング","Tags":"API, システム設計, REST, バックエンド","CopyCount":395},{"Title":"SQLクエリの最適化（チューニング）","Prompt":"以下のSQLクエリのパフォーマンスを改善したいです。実行速度を向上させるリライト案と、追加すべきインデックスの設定提案をお願いします。\n\n対象クエリ：\n【ここにSQL】","Category":"プログラミング","Tags":"SQL, データベース, パフォーマンス, 開発","CopyCount":420},{"Title":"JavaScript/TypeScript Unitテスト生成","Prompt":"以下のJavaScript/TypeScript関数に対するJest（またはVitest）を用いたユニットテストコードを作成してください。正常系テストだけでなく、境界値や異常系エラーのテストケースも含めてください。\n\n対象関数：\n","Category":"プログラミング","Tags":"テスト, Jest, TypeScript, 品質保証","CopyCount":305},{"Title":"Gitコミットメッセージの作成","Prompt":"以下のコード修正差分（diff）を元に、Conventional Commitsの規約に則った分かりやすいGitコミットメッセージ（英語および日本語訳）を作成してください。\n\ndiff情報：\n","Category":"プログラミング","Tags":"Git, 開発ツール, チーム開発, バージョン管理","CopyCount":470},{"Title":"正規表現（RegEx）のパターン生成","Prompt":"「【マッチさせたい文字列の条件】」に一致する正規表現を作成してください。パターンの各要素の解説と、テスト用マッチング例（OK例・NG例）も併記してください。","Category":"プログラミング","Tags":"正規表現, 文字列処理, 開発","CopyCount":360},{"Title":"GraphQLスキーマの定義","Prompt":"【ドメイン・モデル名（例: ECサイトの注文・商品・ユーザー）】を表現するGraphQLスキーマ（SDL形式）を定義してください。Type、Query、Mutation、Enumを適切に含めてください。","Category":"プログラミング","Tags":"GraphQL, スキーマ, API設計","CopyCount":180},{"Title":"Docker Compose環境の構成ファイル生成","Prompt":"【使用スタック（例: Node.js + PostgreSQL + Redis）】をローカル開発環境でワンコマンドで立ち上げるための docker-compose.yml ファイルを作成してください。環境変数設定やボリュームマウントも含めてください。","Category":"プログラミング","Tags":"Docker, インフラ, 開発環境, DevOps","CopyCount":350},{"Title":"Python自動化スクリプトの作成","Prompt":"【処理内容（例: 指定フォルダ内の複数のExcelファイルを読み込み、1つのファイルに統合して集計）】を行うPythonスクリプトを作成してください。エラー処理と進捗表示のログ出力も含めてください。","Category":"プログラミング","Tags":"Python, 自動化, スクリプト, 業務効率化","CopyCount":540},{"Title":"アルゴリズムの時間・空間複雑度解析","Prompt":"以下のコード/アルゴリズムについて、時間複雑度（Big-O）および空間複雑度を計算し、なぜその計算量になるのか理由を解説してください。さらに、より計算量を抑えるアイデアがあれば提案してください。\n\nコード：\n","Category":"プログラミング","Tags":"アルゴリズム, 計算量, データ構造, コーディングテスト","CopyCount":190},{"Title":"CSS/Tailwind UIコンポーネント作成","Prompt":"Tailwind CSSを使用して、【UI要素（例: モーダルダイアログ / ドロップダウンメニュー）】のHTML・CSSコードを作成してください。レスポンシブ対応、ホバー状態のアニメーション、アクセシビリティ（ARIA属性）を配慮してください。","Category":"プログラミング","Tags":"フロントエンド, Tailwind, UI, CSS","CopyCount":330},{"Title":"OpenAPI (Swagger) 仕様書の生成","Prompt":"以下の仕様を元に、OpenAPI 3.0形式（YAML）のAPI仕様書を作成してください。\nエンドポイント：\n説明：\nパラメータ：","Category":"プログラミング","Tags":"OpenAPI, Swagger, ドキュメント, API","CopyCount":165},{"Title":"レガシーコードのドキュメント自動生成","Prompt":"以下のコードのすべての関数とクラスに、引数・戻り値・副作用・例外処理を明記した詳細なドキュメントコメント（JSDocまたはDocstring）を付与してください。\n\n","Category":"プログラミング","Tags":"ドキュメント, JSDoc, 可読性, リファクタリング","CopyCount":210},{"Title":"CRON式（定期実行スケジュール）の生成","Prompt":"「【実行したいスケジュール（例: 毎月第1月曜日の午前9時30分）】」を表すCRON式を作成してください。各フィールド（分・時・日・月・曜日）の意味を説明し、次回の実行日時例を示してください。","Category":"プログラミング","Tags":"CRON, バッチ処理, サーバー, 自動化","CopyCount":260},{"Title":"ビジネス英語メールの添削","Prompt":"以下の英文メールを、ビジネスシーン（クライアントへの謝罪と代替案の提示）に適した、丁寧かつプロフェッショナルで自然な表現に添削してください。添削前の英文：\n\n","Category":"ビジネス","Tags":"英語, メール, 添削, ビジネス","CopyCount":450},{"Title":"会議議事録の構造化サマリー","Prompt":"以下の発言メモから、決定事項・保留事項・ToDo（担当者と期限）・次回アジェンダを整理した見やすい会議議事録を作成してください。\n\n会議メモ：\n","Category":"ビジネス","Tags":"議事録, 会議, 業務効率化, ビジネス","CopyCount":510},{"Title":"企画提案書のアウトライン構成","Prompt":"【新プロジェクト/新規施策案】を経営陣にプレゼンするための企画提案書のアウトラインを作成してください。「背景と課題」「提案内容」「期待されるROI・効果」「実行スケジュール」「予算・体制」の各章で述べるべきキーメッセージを提示してください。","Category":"ビジネス","Tags":"企画書, プレゼン, 社内提案, 資料作成","CopyCount":380},{"Title":"エレベーターピッチ","Prompt":"【商品/サービスの概要】について、投資家や見込み客に対して30秒（約150文字）で関心を引くエレベーターピッチを作成してください。フック（興味付け）→解決する課題→自社の強み→Call to Actionを含めてください。","Category":"ビジネス","Tags":"ピッチ, 営業, プレゼン, スタートアップ","CopyCount":290},{"Title":"難航している価格交渉の返信文","Prompt":"取引先から【現状価格】から【希望値引き価格】への値下げ要求を受けています。安易な値引きに応じず、価値をアピールしながら関係性を維持し、代替案（発注量増加や契約期間延長によるメリット提示）を提案する角の立たない返信メールを作成してください。","Category":"ビジネス","Tags":"交渉, 営業, 価格設定, メール","CopyCount":340},{"Title":"退職・転職のご挨拶メール作成","Prompt":"社外の取引先各位に向けた、最終出社日の退職挨拶メールを作成してください。感謝の気持ち、引き継ぎ担当者の連絡先、今後の連絡先、今後の発展を祈る言葉を含め、失礼のないフォーマルな文面にしてください。","Category":"ビジネス","Tags":"メール, マナー, 退職挨拶, ビジネス","CopyCount":220},{"Title":"新入社員向けOJT研修プログラム設計","Prompt":"【職種（例: Webエンジニア / インサイドセールス）】の未経験新入社員を対象とした、最初の3ヶ月間のOJT研修ロードマップを作成してください。月ごとの目標、具体的な学習タスク、評価指標（KPI）を盛り込んでください。","Category":"ビジネス","Tags":"人事, 研修, OJT, 人材育成","CopyCount":195},{"Title":"週次業務報告書（週報）の作成","Prompt":"今週の業務成果と来週の予定を上司に報告する週報を作成してください。「今週の目標と達成率」「主な成果」「直面した課題と改善策」「来週の優先タスク」の項目で整理してください。\n\n今週の作業メモ：\n","Category":"ビジネス","Tags":"週報, 業務報告, タスク管理, ビジネス","CopyCount":405},{"Title":"社内チャットでの丁寧な依頼文","Prompt":"他部署の【担当者名】さんに対して、【依頼したい内容】を社内チャット（Slack等）で依頼する文章を作成してください。相手の業務への配慮、背景の説明、提出期限、返信の要否をコンパクトに伝えてください。","Category":"ビジネス","Tags":"Slack, コミュニケーション, 依頼, 業務効率化","CopyCount":470},{"Title":"SWOT分析のフレームワーク適用","Prompt":"【自社または特定の事業/商品】について、SWOT分析を実行してください。内部環境（Strengths, Weaknesses）と外部環境（Opportunities, Threats）を洗い出し、さらにそれらを掛け合わせたクロスSWOT（攻撃・防衛戦略）を提案してください。","Category":"ビジネス","Tags":"SWOT分析, フレームワーク, 経営戦略, ビジネス","CopyCount":310},{"Title":"業務フローのマニュアル化（SOP）","Prompt":"【自動化・標準化したい業務（例: 経費精算の手順）】の作業手順書（SOP）を作成してください。前提条件、使用ツール、ステップごとの具体的な操作手順、注意点・よくあるミスを一覧化してください。","Category":"ビジネス","Tags":"マニュアル, SOP, 業務改善, 標準化","CopyCount":260},{"Title":"アンケート調査票の設問作成","Prompt":"【調査目的（例: 新サービス利用後の顧客満足度調査）】のためのアンケート設問（全8〜10問）を作成してください。単一選択、複数選択、NPS（推奨度）、自由記述をバランスよく配置してください。","Category":"ビジネス","Tags":"アンケート, 顧客調査, リサーチ, マーケティング","CopyCount":200},{"Title":"採用面接の構造化質問と評価ルーブリック","Prompt":"【採用ポジション（例: シニアマーケター）】に応募してきた候補者の「課題解決力」と「カルチャーフィット」を見極めるための構造化面接質問5選と、回答の良し悪しを判断する5段階の評価基準（ルーブリック）を作成してください。","Category":"ビジネス","Tags":"採用, 面接, 人事, 評価基準","CopyCount":285},{"Title":"1on1ミーティングのアジェンダ設定","Prompt":"部下のモチベーション向上とキャリア支援を目的とした30分間の1on1ミーティングのアジェンダを作成してください。「近況・コンディション確認」「業務の進捗・困りごと」「中長期キャリア・学び」「フィードバック・アクションプラン」の時間配分と問いかけのフレーズを用意してください。","Category":"ビジネス","Tags":"1on1, マネジメント, リーダーシップ, 人事","CopyCount":375},{"Title":"プロジェクトのリスク管理表","Prompt":"【プロジェクト概要】において想定される潜在的リスクを5つ挙げ、それぞれのリスクの影響度・発生確率・未然防止策・発生時の対処プラン（コンティンジェンシープラン）を表形式で整理してください。","Category":"ビジネス","Tags":"リスク管理, プロジェクトマネジメント, PM, ビジネス","CopyCount":240},{"Title":"新規事業のアイデア壁打ち","Prompt":"私は現在新しいWebサービスのアイデアを考えています。以下の【ターゲット層】と【課題】を元に、解決策となる斬新でマネタイズ可能なアイデアを5つ提案してください。それぞれに「サービス名」「概要」「想定される収益モデル」を含めてください。\nターゲット層：\n課題：","Category":"企画・アイデア","Tags":"壁打ち, ブレスト, 企画, 新規事業","CopyCount":560},{"Title":"ネーミング・サービス名の発案","Prompt":"【商品・サービスの特徴とコンセプト】に合う魅力的なサービス名のアイデアを15個提案してください。バリエーションとして「キャッチー系」「英語・造語系」「和風・シンプル系」「エモーショナル系」に分類してください。","Category":"企画・アイデア","Tags":"ネーミング, ブランディング, 発想, アイデア","CopyCount":440},{"Title":"SCAMPER法によるアイデア発想","Prompt":"既存の製品「【製品名（例: 傘）】」に対して、SCAMPER法（Substitute, Combine, Adapt, Modify, Put to other uses, Eliminate, Reverse）を適用し、これまでにない革新的な新しい製品アイデアを7つ発想してください。","Category":"企画・アイデア","Tags":"SCAMPER, 発想手法, イノベーション, ブレスト","CopyCount":275},{"Title":"ターゲットペルソナの詳細定義","Prompt":"【ターゲットとなる商品/サービス】のマーケティング用ターゲットペルソナを1人作成してください。名前、年齢、職業、年収、価値観、日々のルーティン、抱えている最大の悩み（痛点）、購買決定要因を詳細にストーリー仕立てで描いてください。","Category":"企画・アイデア","Tags":"ペルソナ, ターゲット, 顧客理解, マーケティング","CopyCount":415},{"Title":"季節イベント・キャンペーンの企画立案","Prompt":"【自社ジャンル/お店】における【季節/イベント（例: 夏休み・ハロウィン・年末年始）】に向けた集客キャンペーン施策を3つ提案してください。施策内容、ターゲットのインサイト、参加インセンティブ、期待されるSNS拡散効果を記載してください。","Category":"企画・アイデア","Tags":"キャンペーン, イベント, 販促, 企画","CopyCount":230},{"Title":"UXカスタマージャーニーマップの作成","Prompt":"ユーザーが【サービス名】を知ってから購入・リピートするまでのカスタマージャーニーマップを作成してください。「認知」「検討」「購入」「利用」「ファン化」の各フェーズにおけるユーザー行動、思考・感情、接触チャネル、提供すべき体験を整理してください。","Category":"企画・アイデア","Tags":"UX, カスタマージャーニー, 顧客体験, サービスデザイン","CopyCount":320},{"Title":"YouTube/TikTokの動画企画10選","Prompt":"【チャンネルのテーマ/対象読者】向けのショート動画（TikTok/Reels/Shorts）の企画案を10個作成してください。視聴者が1秒でスクロールを止めるフックになるタイトルと、動画のオチ・メッセージを添えてください。","Category":"企画・アイデア","Tags":"動画企画, TikTok, YouTube, バズ","CopyCount":390},{"Title":"ゲーミフィケーション要素の導入","Prompt":"【既存のサービスや習慣化したいアプリ】にユーザーが夢中になるゲーミフィケーション要素（ポイント・バッジ・レベル・ランキング・クエストなど）を組み込む改善アイデアを4つ提案してください。","Category":"企画・アイデア","Tags":"ゲーミフィケーション, ユーザーエンゲージメント, アプリ企画","CopyCount":210},{"Title":"ビジネスモデルキャンバス（BMC）作成","Prompt":"【ビジネスアイデア】について、ビジネスモデルキャンバスの9つの要素（顧客セグメント、価値提案、チャネル、顧客との関係、収益の流れ、主要リソース、主要活動、主要パートナー、コスト構造）を整理してください。","Category":"企画・アイデア","Tags":"ビジネスモデル, スタートアップ, 経営企画","CopyCount":295},{"Title":"Podcast/ラジオ番組のコーナー企画","Prompt":"【番組テーマ/ターゲット】のポッドキャスト番組における、リスナー参加型の人気定番コーナー企画を5つ作成してください。コーナー名、趣旨、投稿テーマの具体例を記載してください。","Category":"企画・アイデア","Tags":"ポッドキャスト, ラジオ, 企画, エンタメ","CopyCount":150},{"Title":"アイスブレイク（氷解ワーク）案","Prompt":"初対面の参加者20名が集まる【イベントのテーマ】において、会場を一瞬で和ませ相互理解を深めるおすすめのアイスブレイクゲームを3つ提案してください。所要時間、必要な準備、進行手順をまとめてください。","Category":"企画・アイデア","Tags":"アイスブレイク, ワークショップ, コミュニティ, イベント","CopyCount":185},{"Title":"アップセル・クロスセル施策の提案","Prompt":"【既存サービス（例: 月額SaaSプラン）】を利用中の既存顧客に対して、上位プランへの移行（アップセル）や関連オプションの購入（クロスセル）を促すためのアプローチ施策とタイミングを3つ提案してください。","Category":"企画・アイデア","Tags":"LTV, 収益化, カスタマーサクセス, 営業企画","CopyCount":265},{"Title":"地方創生・地域活性化のアイデア","Prompt":"【地域の特産品や観光資源】を活用した、若年層やインバウンド観光客を呼び込むための地域活性化プロジェクト企画案を作成してください。ストーリー性のあるコンセプトと体験型コンテンツのアイデアを含めてください。","Category":"企画・アイデア","Tags":"地方創生, 地域活性化, 観光, 企画","CopyCount":170},{"Title":"オウンドメディアのコンテンツカレンダー","Prompt":"【ターゲット読者と目的】を持つオウンドメディアの、今後1ヶ月分（週2回公開・計8本）の記事テーマと狙う検索キーワード、想定されるコンバージョン（読者の次の行動）の一覧表を作成してください。","Category":"企画・アイデア","Tags":"オウンドメディア, コンテンツマーケティング, 企画","CopyCount":240},{"Title":"社内ハッカソンのお題決定","Prompt":"【自社の事業領域・保有技術】を活用した社内ハッカソンを開催します。社員の創造性を刺激し、実装可能性が高く社会課題解決につながるテーマお題（テーマソング的フレーズ）を5パターン提案してください。","Category":"企画・アイデア","Tags":"ハッカソン, イノベーション, 社内イベント","CopyCount":135},{"Title":"SNS用の短文キャッチコピー","Prompt":"以下の製品特徴を元に、X（旧Twitter）で拡散されやすい、思わずタップしたくなるようなキャッチコピーを3パターン（直球系、共感系、意外性系）作成してください。\n製品特徴：","Category":"マーケティング","Tags":"SNS, キャッチコピー, マーケティング","CopyCount":590},{"Title":"LPファーストビューのコピー構成","Prompt":"【商品・サービス名】のLPファーストビュー（最上部）の構成を作成してください。「メインキャッチコピー」「サブキャッチコピー」「権威性・実績」「アクションボタン（CTAテキスト）」を提案してください。","Category":"マーケティング","Tags":"LP, 成約率UP, Webデザイン, コピーライティング","CopyCount":485},{"Title":"Meta（Instagram）広告文章案","Prompt":"【ターゲット層】向けに【商品名】を宣伝するInstagramフィード広告の広告文案を3パターン（悩み解決型・ベネフィット強調型・口コミ体験談型）作成してください。それぞれの画像/動画クリエイティブの指示書も付けてください。","Category":"マーケティング","Tags":"Web広告, Meta広告, Instagram, 集客","CopyCount":370},{"Title":"SEOキーワードのクラスタリング","Prompt":"「【メインキーワード（例: 転職）】」に関連するロングテールキーワード群を抽出し、検索意図ごとにカテゴリー分類（キーワードクラスタ）してください。それぞれのクラスターで執筆すべき記事タイトル案を提示してください。","Category":"マーケティング","Tags":"SEO, キーワードリサーチ, コンテンツ施策","CopyCount":330},{"Title":"Googleレスポンシブ検索広告作成","Prompt":"【提供サービス】に関するGoogleレスポンシブ検索広告の入稿アセットを作成してください。「検索キーワード（マッチタイプ指定）」「見出し（15文字以内×10本）」「説明文（90文字以内×4本）」を用意してください。","Category":"マーケティング","Tags":"リスティング広告, Google広告, 運用型広告","CopyCount":280},{"Title":"Instagram運用世界観・テンプレート","Prompt":"【ジャンル（例: 丁寧な暮らし・韓国風インテリア）】のInstagramアカウントのブランディング設計を作成してください。投稿の配色テーマ、フォントの方向性、表紙画像のレイアウト構成、キャプションの締めくくり定型文を定めてください。","Category":"マーケティング","Tags":"Instagram, SNS運用, ブランディング","CopyCount":420},{"Title":"BtoBホワイトペーパーの構成案","Prompt":"【自社ソリューション】のリード獲得（資料請求）を目的としたホワイトペーパーの目次構成案を作成してください。顧客の抱える課題提起から業界動向データ、解決アプローチ、自社事例紹介までのストーリーラインを組み立ててください。","Category":"マーケティング","Tags":"ホワイトペーパー, BtoB, リード獲得, マーケティング","CopyCount":250},{"Title":"口コミ・レビュー促進サンクスカード","Prompt":"商品購入者に同梱するサンクスカード（お礼状）の文章を作成してください。購入への感謝を伝え、GoogleマップやECサイトへの高評価レビュー投稿を優しく促す（特典案内つき）文面にしてください。","Category":"マーケティング","Tags":"口コミ, CRM, レビュー, 顧客満足","CopyCount":310},{"Title":"競合他社比較表（ポジショニングマップ）","Prompt":"【自社サービス名】と【競合A社】【競合B社】の比較表を作成してください。価格、機能、サポート体制、ターゲット層、強み・弱みの項目で比較し、自社の差別化ポイント（USP）を際立たせてください。","Category":"マーケティング","Tags":"競合分析, ポジショニング, USP, 戦略","CopyCount":290},{"Title":"インフルエンサー打診DM文面","Prompt":"【自社ブランド】のPR案件を依頼したいギフティング/PR用インフルエンサーへのInstagramダイレクトメッセージ（DM）を作成してください。アカウントへの褒め言葉、PR依頼の条件、提供商品、報酬、返信期限を礼儀正しく簡潔に記述してください。","Category":"マーケティング","Tags":"インフルエンサー, DM, PR, 営業","CopyCount":360},{"Title":"休眠顧客への掘り起こしリターゲティング","Prompt":"過去6ヶ月間購入やログインがない休眠ユーザーに対して、再利用を促す「おかえりなさいキャンペーン」メールを作成してください。限定クーポンや新機能の紹介を盛り込み、開封率を高める件名案も添えてください。","Category":"マーケティング","Tags":"リターゲティング, メルマガ, 休眠顧客, CRM","CopyCount":215},{"Title":"TikTok/Xトレンドミーム活用施策","Prompt":"現在トレンドとなっている【Z世代に人気のアクション/音源/構図】を取り入れて、自社商品「【商品名】」を自然にPRする親しみやすいバズ投稿のアイデアを2案作成してください。","Category":"マーケティング","Tags":"SNS, トレンド, Z世代, バズ","CopyCount":400},{"Title":"A/Bテスト検証仮説とパターン作成","Prompt":"【現行のボタンテキストやコピー】のコンバージョン率（CVR）を上げるためのA/Bテスト計画を作成してください。現行案（Control）に対する変更案（Variant A, Variant B）と、なぜその変更でCVRが上がると予想するか仮説を記述してください。","Category":"マーケティング","Tags":"ABテスト, CVR改善, グロースハック, CRO","CopyCount":195},{"Title":"プレスリリース後のSNSクロスポスト文","Prompt":"新発表「【プレスリリース題目】」の公開に合わせて、X（Twitter）、LinkedIn、Facebookに投稿するソーシャル投稿文をそれぞれのSNSの文化・文字数・トーンに合わせて書き分けてください。","Category":"マーケティング","Tags":"広報, SNS連動, PR, クロスポスト","CopyCount":225},{"Title":"商品パッケージのキャッチコピー文","Prompt":"店頭の棚でパッと目を引く【食品/コスメ製品】のパッケージ表面のメインコピー（10文字以内）と、裏面に記載する情熱的なストーリー説明文（150文字程度）を作成してください。","Category":"マーケティング","Tags":"パッケージ, キャッチコピー, 商品開発","CopyCount":270},{"Title":"5歳児でもわかる言葉での概念説明","Prompt":"「【複雑な概念（例: 量子力学 / ブロックチェーン / インフレ）】」について、5歳の子どもに読み聞かせるおとぎ話のようなストーリーを使ってわかりやすく説明してください。","Category":"学習・教育","Tags":"教育, わかりやすい説明, 子ども向け, 概念理解","CopyCount":445},{"Title":"英会話フレーズと対話ロールプレイ","Prompt":"【海外旅行の状況（例: レストランで注文を変更したい時）】で使える自然なネイティブの英語フレーズ5選と、店員との役対話（ロールプレイ）スクリプトを作成してください。発音のコツや日本語訳も付けてください。","Category":"学習・教育","Tags":"英語学習, 英会話, 海外旅行, ロールプレイ","CopyCount":385},{"Title":"資格試験の効率的学習スケジュール","Prompt":"【資格名（例: 基本情報技術者試験 / 宅建）】に【残り日数（例: 3ヶ月）】で合格するための週単位の学習計画表を作成してください。テキストインプット、過去問演習、直前模試のバランスと復習のサイクルを組み込んでください。","Category":"学習・教育","Tags":"資格試験, 勉強法, 計画表, 学習効率","CopyCount":350},{"Title":"オリジナル確認クイズ（4択）自動生成","Prompt":"「【学習テーマ（例: 日本史の明治維新）】」に関する知識を確認するための4択クイズを5問作成してください。各問題に正解、不正解選択肢の解説、難易度（初級・中級・上級）を明記してください。","Category":"学習・教育","Tags":"クイズ, テスト作成, 学習, 復習","CopyCount":290},{"Title":"読書・論文チェック用の質問テンプレート","Prompt":"専門書や学術論文を読む際に、内容を深く理解し自分の血肉にするための「Active Reading（能動的読書）用チェックリスト10選」を作成してください。","Category":"学習・教育","Tags":"読書術, 論文, 思考法, 勉強","CopyCount":235},{"Title":"1週間の時短献立と買い物リスト","Prompt":"一人暮らし向けの「1食200円以下・調理時間15分以内・栄養バランスの良い平日5日分の夕食献立」と、週末にスーパーで買うべき食材の買い物リストをまとめて作成してください。","Category":"ライフハック","Tags":"時短, 料理, 節約, 生活","CopyCount":505},{"Title":"旅行タイムスケジュールと持ち物リスト","Prompt":"【目的地（例: 京都2泊3日）】への旅行計画を作成してください。主要観光スポットを効率よく巡るモデルコース（時間刻み）、ローカルグルメの提案、絶対忘れてはいけない持ち物チェックリストを記載してください。","Category":"ライフハック","Tags":"旅行, 観光, スケジュール, ライフハック","CopyCount":410},{"Title":"習慣化のためのIf-Thenプランニング","Prompt":"「【身につけたい習慣（例: 毎朝10分のストレッチ）】」が三日坊主にならず毎日続くように、トリガーと行動をセットにしたIf-Thenプラン（「もしXしたら、Yする」）を5パターン作成してください。","Category":"ライフハック","Tags":"習慣化, 自己改善, 生産性, メンタル","CopyCount":365},{"Title":"部屋の断捨離・片付けアクションプラン","Prompt":"モノであふれた【部屋（例: クローゼット / デスク周り）】を1週末でスッキリ片付けるための「捨て基準ルール」と「3ステップ片付けワークフロー」を作成してください。","Category":"ライフハック","Tags":"片付け, 断捨離, 整理整頓, ライフハック","CopyCount":280},{"Title":"目標達成のためのポモドーロ作業設計","Prompt":"【今日終わらせたい大タスク】を、25分集中＋5分休憩の「ポモドーロ・テクニック」のコマ（ポモ）に細分化した作業スケジュールを作成してください。途中で集中が切れない工夫も教えてください。","Category":"ライフハック","Tags":"タイムマネジメント, ポモドーロ, 集中力, タスク管理","CopyCount":335}];
+
+  // コピー数カウント管理 (LocalStorage)
+  const COPY_KEY = 'promptvault_copy_counts_v1';
+  function getCopyCounts() {
+    try {
+      const stored = JSON.parse(localStorage.getItem(COPY_KEY) || '{}');
+      const counts = {};
+      RAW_PROMPTS.forEach(function(p) {
+        counts[p.Title] = stored[p.Title] !== undefined ? stored[p.Title] : (p.CopyCount || 0);
+      });
+      return counts;
+    } catch(e) {
+      const counts = {};
+      RAW_PROMPTS.forEach(function(p) { counts[p.Title] = p.CopyCount || 0; });
+      return counts;
+    }
+  }
+  const copyCounts = getCopyCounts();
+
+  function incrementCopy(title) {
+    copyCounts[title] = (copyCounts[title] || 0) + 1;
+    try {
+      localStorage.setItem(COPY_KEY, JSON.stringify(copyCounts));
+    } catch(e) {}
+  }
+
   // カテゴリ → CSSクラス
   const CAT_CLASS = {
     '画像生成':     'cat-img',
@@ -579,52 +607,23 @@
       .replace(/"/g,'&quot;');
   }
 
-  // RFC4180 CSV パーサー
-  function parseCSV(text){
-    const rows=[]; let cur='',inQ=false,row=[];
-    for(let i=0;i<text.length;i++){
-      const c=text[i],n=text[i+1];
-      if(inQ){
-        if(c==='"'&&n==='"'){cur+='"';i++;}
-        else if(c==='"'){inQ=false;}
-        else{cur+=c;}
-      } else {
-        if(c==='"'){inQ=true;}
-        else if(c===','){row.push(cur);cur='';}
-        else if(c==='
-'||(c===''&&n==='
-')){
-          if(c==='')i++;
-          row.push(cur);cur='';rows.push(row);row=[];
-        } else{cur+=c;}
-      }
-    }
-    if(cur||row.length){row.push(cur);rows.push(row);}
-    if(rows.length<2)return[];
-    const hdrs=rows[0].map(h=>h.trim());
-    return rows.slice(1).filter(r=>r.some(c=>c.trim())).map(r=>{
-      const o={};hdrs.forEach((h,i)=>{o[h]=(r[i]||'').trim();});return o;
-    });
-  }
-
   // LocalStorage お気に入り管理
   const FAV_KEY = 'promptvault_favs_v1';
   function getFavorites() {
     try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || '[]')); }
-    catch { return new Set(); }
+    catch(e) { return new Set(); }
   }
   function saveFavorites(favSet) {
-    localStorage.setItem(FAV_KEY, JSON.stringify([...favSet]));
+    try { localStorage.setItem(FAV_KEY, JSON.stringify([...favSet])); } catch(e){}
     updateFavBadge();
   }
   const favorites = getFavorites();
 
   // 状態
-  let allPrompts=[], activeCategory=null, activeTags=new Set(), searchQuery='', showOnlyFavs=false;
+  let allPrompts = RAW_PROMPTS.slice(), activeCategory=null, activeTags=new Set(), searchQuery='', showOnlyFavs=false, showOnlyTop10=false;
 
   // DOM
   const grid=document.getElementById('card-grid');
-  const loadingEl=document.getElementById('loading-state');
   const emptyEl=document.getElementById('empty-state');
   const catFiltersEl=document.getElementById('category-filters');
   const tagFiltersEl=document.getElementById('tag-filters');
@@ -636,7 +635,7 @@
   const searchMobile=document.getElementById('search-input-mobile');
 
   function updateFavBadge() {
-    favCountBadgeEl.textContent = `★ お気に入り ${favorites.size}件`;
+    favCountBadgeEl.textContent = '★ お気に入り ' + favorites.size + '件';
   }
   updateFavBadge();
 
@@ -646,20 +645,40 @@
     const tags=[...new Set(prompts.flatMap(p=>(p.Tags||'').split(',').map(t=>t.trim()).filter(Boolean)))];
 
     catFiltersEl.innerHTML='';
-    const allBtn=makeBtn('すべて',()=>{ activeCategory=null; showOnlyFavs=false; renderAll(); setActiveBtn(catFiltersEl,allBtn); }, true);
+    const allBtn=makeBtn('すべて',()=>{
+      activeCategory=null; showOnlyFavs=false; showOnlyTop10=false;
+      renderAll(); setActiveBtn(catFiltersEl,allBtn);
+    }, true);
     catFiltersEl.appendChild(allBtn);
 
-    // ★ お気に入りフィルターボタン
+    // 🔥 人気 TOP 10 フィルター
+    const rankBtn=makeBtn('🔥 人気 TOP 10', ()=>{
+      showOnlyTop10=!showOnlyTop10;
+      if (showOnlyTop10) { showOnlyFavs=false; activeCategory=null; }
+      rankBtn.classList.toggle('active', showOnlyTop10);
+      favBtn.classList.remove('active');
+      renderAll();
+    });
+    rankBtn.classList.add('rank-btn');
+    catFiltersEl.appendChild(rankBtn);
+
+    // ★ お気に入りフィルター
     const favBtn=makeBtn('★ お気に入りのみ', ()=>{
       showOnlyFavs=!showOnlyFavs;
+      if (showOnlyFavs) { showOnlyTop10=false; activeCategory=null; }
       favBtn.classList.toggle('active', showOnlyFavs);
+      rankBtn.classList.remove('active');
       renderAll();
     });
     favBtn.classList.add('fav-btn');
     catFiltersEl.appendChild(favBtn);
 
     cats.forEach(cat=>{
-      const btn=makeBtn(cat,()=>{ activeCategory=cat; showOnlyFavs=false; renderAll(); setActiveBtn(catFiltersEl,btn); });
+      const btn=makeBtn(cat,()=>{
+        activeCategory=cat; showOnlyFavs=false; showOnlyTop10=false;
+        rankBtn.classList.remove('active'); favBtn.classList.remove('active');
+        renderAll(); setActiveBtn(catFiltersEl,btn);
+      });
       catFiltersEl.appendChild(btn);
     });
 
@@ -687,13 +706,21 @@
   }
 
   function setActiveBtn(parent,activeEl){
-    parent.querySelectorAll('.filter-btn:not(.fav-btn)').forEach(b=>b.classList.remove('active'));
+    parent.querySelectorAll('.filter-btn:not(.fav-btn):not(.rank-btn)').forEach(b=>b.classList.remove('active'));
     activeEl.classList.add('active');
   }
 
   // フィルタリング
   function filterPrompts(){
-    return allPrompts.filter(p=>{
+    let list = allPrompts.slice();
+
+    // 人気TOP10並び替え
+    if (showOnlyTop10) {
+      list.sort((a,b) => (copyCounts[b.Title]||0) - (copyCounts[a.Title]||0));
+      list = list.slice(0, 10);
+    }
+
+    return list.filter(p=>{
       const q=searchQuery.toLowerCase();
       const ms=!q||(p.Title||'').toLowerCase().includes(q)||(p.Prompt||'').toLowerCase().includes(q)||(p.Tags||'').toLowerCase().includes(q)||(p.Category||'').toLowerCase().includes(q);
       const mc=!activeCategory||p.Category===activeCategory;
@@ -704,52 +731,72 @@
     });
   }
 
+  // 人気順全リスト (順位特定用)
+  function getRankedList() {
+    return allPrompts.slice().sort((a,b) => (copyCounts[b.Title]||0) - (copyCounts[a.Title]||0));
+  }
+
   // カード生成
   function createCard(p,idx){
     const card=document.createElement('article');
     card.className='prompt-card p-5 flex flex-col gap-3';
-    card.style.animationDelay=Math.min(idx*40,300)+'ms';
 
     const catCls=getCatClass(p.Category);
     const tags=(p.Tags||'').split(',').map(t=>t.trim()).filter(Boolean);
-    const promptText=(p.Prompt||'').replace(/\\n/g,'\n');
+    const promptText=p.Prompt||'';
     const isFav = favorites.has(p.Title);
+    const count = copyCounts[p.Title] || 0;
 
-    const tagsHtml=tags.map(t=>`<span class="tag-chip" data-tag="${esc(t)}">#${esc(t)}</span>`).join('');
+    // 順位算出
+    const ranked = getRankedList();
+    const rankIndex = ranked.findIndex(r => r.Title === p.Title);
+    let rankBadgeHtml = '';
+    if (rankIndex >= 0 && rankIndex < 10) {
+      const rankNum = rankIndex + 1;
+      const rankClass = rankNum === 1 ? 'rank-1' : rankNum === 2 ? 'rank-2' : rankNum === 3 ? 'rank-3' : 'rank-other';
+      rankBadgeHtml = '<span class="rank-badge ' + rankClass + '">🔥 第' + rankNum + '位</span>';
+    }
 
-    card.innerHTML=`
-      <div class="flex items-start justify-between gap-2">
-        <span class="category-badge ${catCls}">${esc(p.Category||'不明')}</span>
-        <button class="star-btn ${isFav?'starred':''}" data-title="${esc(p.Title)}" title="${isFav?'お気に入りから削除':'お気に入りに追加'}">
-          <svg class="w-5 h-5" fill="${isFav?'currentColor':'none'}" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-          </svg>
-        </button>
-      </div>
-      <h2 class="text-white font-semibold text-base leading-snug">${esc(p.Title||'無題')}</h2>
-      ${tags.length?`<div class="flex flex-wrap gap-1.5">${tagsHtml}</div>`:''}
-      <hr class="card-divider"/>
-      <div class="flex-1 flex flex-col gap-2">
-        <p class="prompt-body">${esc(promptText)}</p>
-        <button class="expand-btn text-left w-fit" data-expanded="false">▼ もっと見る</button>
-      </div>
-      <hr class="card-divider"/>
-      <div class="flex items-center justify-between gap-2">
-        <div class="flex items-center gap-1.5">
-          <button class="action-icon-btn card-share-btn" data-title="${esc(p.Title)}" data-prompt="${esc(promptText)}">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 10-5.367-2.684 3 3 0 005.367 2.684zm0 9.316a3 3 0 10-5.368 2.684 3 3 0 005.368-2.684z"/></svg>
-            シェア
-          </button>
-        </div>
-        <button class="copy-btn" data-prompt="${esc(promptText)}" data-title="${esc(p.Title)}">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
-          </svg>
-          コピーする
-        </button>
-      </div>
-    `;
+    const tagsHtml=tags.map(t=>'<span class="tag-chip" data-tag="' + esc(t) + '">#' + esc(t) + '</span>').join('');
+
+    card.innerHTML=
+      '<div class="flex items-start justify-between gap-2">' +
+        '<div class="flex items-center gap-2 flex-wrap">' +
+          '<span class="category-badge ' + catCls + '">' + esc(p.Category||'不明') + '</span>' +
+          rankBadgeHtml +
+        '</div>' +
+        '<button class="star-btn ' + (isFav?'starred':'') + '" data-title="' + esc(p.Title) + '" title="' + (isFav?'お気に入りから削除':'お気に入りに追加') + '">' +
+          '<svg class="w-5 h-5" fill="' + (isFav?'currentColor':'none') + '" stroke="currentColor" viewBox="0 0 24 24">' +
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>' +
+          '</svg>' +
+        '</button>' +
+      '</div>' +
+      '<h2 class="text-white font-semibold text-base leading-snug">' + esc(p.Title||'無題') + '</h2>' +
+      (tags.length ? '<div class="flex flex-wrap gap-1.5">' + tagsHtml + '</div>' : '') +
+      '<hr class="card-divider"/>' +
+      '<div class="flex-1 flex flex-col gap-2">' +
+        '<p class="prompt-body">' + esc(promptText) + '</p>' +
+        '<button class="expand-btn text-left w-fit" data-expanded="false">▼ もっと見る</button>' +
+      '</div>' +
+      '<hr class="card-divider"/>' +
+      '<div class="flex items-center justify-between gap-2">' +
+        '<div class="flex items-center gap-2">' +
+          '<span class="text-xs text-slate-500 font-mono flex items-center gap-1" title="累計コピー回数">' +
+            '<svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>' +
+            '<span class="copy-count-num">' + count + '</span>回' +
+          '</span>' +
+          '<button class="action-icon-btn card-share-btn" data-title="' + esc(p.Title) + '">' +
+            '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 10-5.367-2.684 3 3 0 005.367 2.684zm0 9.316a3 3 0 10-5.368 2.684 3 3 0 005.368-2.684z"/></svg>' +
+            'シェア' +
+          '</button>' +
+        '</div>' +
+        '<button class="copy-btn" data-prompt="' + esc(promptText) + '" data-title="' + esc(p.Title) + '">' +
+          '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">' +
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>' +
+          '</svg>' +
+          'コピーする' +
+        '</button>' +
+      '</div>';
 
     // ホバーライト
     card.addEventListener('mousemove',e=>{
@@ -758,7 +805,7 @@
       card.style.setProperty('--my',((e.clientY-r.top)/r.height*100).toFixed(1)+'%');
     });
 
-    // 星（お気に入り）ボタン
+    // 星（お気に入り）
     const starBtn = card.querySelector('.star-btn');
     starBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -784,9 +831,9 @@
     cardShareBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const title = cardShareBtn.dataset.title;
-      const text = `【AIプロンプト】${title} — PromptVault`;
+      const text = '【AIプロンプト】' + title + ' — PromptVault';
       const url = window.location.href;
-      const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+      const xUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
       window.open(xUrl, '_blank', 'width=600,height=400');
       if (typeof gtag === 'function') gtag('event', 'share_prompt', { prompt_title: title });
     });
@@ -796,6 +843,12 @@
     copyBtn.addEventListener('click',()=>{
       const txt=copyBtn.dataset.prompt;
       const title=copyBtn.dataset.title;
+
+      // コピー回数加算
+      incrementCopy(title);
+      const numSpan = card.querySelector('.copy-count-num');
+      if (numSpan) numSpan.textContent = copyCounts[title];
+
       const doSuccess=()=>{
         copyBtn.classList.add('copied');
         copyBtn.innerHTML='<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg> コピーしました';
@@ -855,7 +908,6 @@
       filtered.forEach((p,i)=>{
         const card=createCard(p,i);
         grid.appendChild(card);
-        requestAnimationFrame(()=>requestAnimationFrame(()=>card.classList.add('visible')));
       });
     }
     const lbl=filtered.length+' / '+allPrompts.length+' 件';
@@ -890,25 +942,26 @@
 
   // リセット
   resetBtn.addEventListener('click',()=>{
-    activeCategory=null; activeTags.clear(); searchQuery=''; showOnlyFavs=false;
+    activeCategory=null; activeTags.clear(); searchQuery=''; showOnlyFavs=false; showOnlyTop10=false;
     searchInput.value=''; searchMobile.value='';
     const allBtn=catFiltersEl.querySelector('.filter-btn');
     if(allBtn) setActiveBtn(catFiltersEl,allBtn);
     catFiltersEl.querySelectorAll('.fav-btn').forEach(b=>b.classList.remove('active'));
+    catFiltersEl.querySelectorAll('.rank-btn').forEach(b=>b.classList.remove('active'));
     tagFiltersEl.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
     renderAll();
   });
 
   // サイト共有ボタン
   document.getElementById('share-site-x').addEventListener('click', () => {
-    const text = 'PromptVault — ChatGPTやMidjourneyで使える厳選AIプロンプト100選！ワンクリックでコピー＆即実践';
+    const text = 'PromptVault — ChatGPTやMidjourneyで使える厳選AIプロンプト100選！ワンクリックコピー＆人気順ランキング';
     const url = window.location.href;
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url), '_blank');
   });
 
   document.getElementById('share-site-line').addEventListener('click', () => {
     const url = window.location.href;
-    window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(url)}`, '_blank');
+    window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent(url), '_blank');
   });
 
   document.getElementById('copy-site-link').addEventListener('click', () => {
@@ -944,9 +997,10 @@
     const prompt = document.getElementById('input-prompt').value;
     const tags = document.getElementById('input-tags').value;
 
-    // 新規プロンプトを先頭に追加（ローカル反映）
-    const newP = { Title: title, Category: cat, Prompt: prompt, Tags: tags };
+    // 新規プロンプトを追加
+    const newP = { Title: title, Category: cat, Prompt: prompt, Tags: tags, CopyCount: 1 };
     allPrompts.unshift(newP);
+    copyCounts[title] = 1;
 
     showToast('✨ プロンプトをご提案いただきありがとうございます！');
     closeModal();
@@ -954,176 +1008,9 @@
     if (typeof gtag === 'function') gtag('event', 'submit_prompt', { prompt_title: title });
   });
 
-  // CSV 読み込み
-  const INLINE_CSV = `Title,Prompt,Category,Tags
-サイバーパンクな路地裏,"cyberpunk alleyway, neon lights, rainy, 8k resolution, highly detailed, cinematic lighting, octane render",画像生成,"風景, サイバーパンク, 夜, リアル"
-水彩画風の猫,"a cute fluffy cat, watercolor painting, soft pastel colors, dreamy atmosphere, white background, masterpiece",画像生成,"動物, 水彩, イラスト, かわいい"
-シズル感のある料理写真,"professional food photography, a delicious bowl of ramen, rich broth, steam rising, macro lens, soft studio lighting, 4k, photorealistic",画像生成,"料理, リアル, 写真, 飯テロ"
-レトロポップなポスター風,"retro pop art poster, 1980s style, vibrant colors, geometric shapes, bold typography, vector illustration, flat design",画像生成,"レトロ, ポップアート, デザイン, ベクター"
-ファンタジーRPGの背景,"epic fantasy landscape, floating islands, majestic waterfalls, glowing crystals, ancient ruins, beautiful sunset, highly detailed, concept art, artstation",画像生成,"ファンタジー, 風景, コンセプトアート, 背景"
-ミニマリストの北欧風インテリア,"modern Scandinavian living room design, minimalist furniture, warm sunlight streaming through large window, indoor plants, neutral color palette, architectural digest style",画像生成,"インテリア, デザイン, 建築, おしゃれ"
-近未来都市の空撮,"aerial view of a futuristic eco-city, glass skyscrapers with hanging gardens, solar panel arrays, flying vehicles, golden hour lighting, hyperrealistic, 8k",画像生成,"SF, 都市, 建築, 未来"
-アニメ風の女子高生ポートレート,"anime girl smiling under cherry blossoms, Makoto Shinkai style, vibrant sky, lens flare, detailed background, masterpiece, 4k",画像生成,"アニメ, キャラクター, 新海誠風, 桜"
-3Dクレイモデル風キャラクター,"cute 3D claymation robot worker, smooth Pixar style, pastel colors, soft studio lighting, isometric view, blender render",画像生成,"3D, クレイアニメ, 3Dモデル, かわいい"
-幻想的な魔法の森,"enchanted forest with bioluminescent giant mushrooms, floating fireflies, ancient mossy trees, mystical fog, magical ambient light, photorealistic",画像生成,"ファンタジー, 自然, 神秘的, 光"
-ラグジュアリー香水のプロダクト写真,"luxury perfume bottle placed on smooth black marble stone, water splashes, dramatic moody lighting, gold accents, commercial product photography, 8k",画像生成,"製品写真, 広告, ラグジュアリー, コスメ"
-浮世絵風の宇宙飛行士,"astronaut in deep space, ukiyo-e woodblock print style, Katsushika Hokusai influence, Japanese traditional wave patterns, vintage paper texture",画像生成,"和風, 浮世絵, 宇宙, アート"
-フラットWebアイコンセット,"set of 9 modern flat vector icons for finance app, clean lines, rounded corners, gradient blue and orange color scheme, white isolated background",画像生成,"UI/UX, アイコン, ベクター, Webデザイン"
-ヴィンテージ車と海岸道路,"classic 1960s convertible car driving along California coastal highway, sunset ocean view, film photography style, Kodak Portra 400 grain, warm nostalgic mood",画像生成,"車, ヴィンテージ, 風景, フィルム写真"
-水滴が跳ねるマクロ写真,"extreme macro high-speed photograph of a single water droplet hitting dark liquid surface, perfect ripple ring, high clarity, dramatic lighting, 8k",画像生成,"マクロ写真, 水, アーティスティック, 高解像度"
-ブログ記事の構成案作成,"あなたはプロのWebライターです。以下のテーマについて、SEOを意識した読者の検索意図を満たすブログ記事の構成案（H2, H3見出し）を作成してください。ターゲット層：【ここにターゲット】 テーマ：【ここにテーマ】",テキスト生成,"ブログ, SEO, ライティング"
-長文記事の要約（3行・箇条書き）,"以下の文章を読み、重要なポイントを3つの簡潔な箇条書きにまとめてください。専門用語は避け、中学生でも理解できる平易な言葉を使用してください。
-
-対象テキスト：
-【ここに文章を貼り付け】",テキスト生成,"要約, 業務効率化, 文章作成"
-文章の校正・推敲,"以下の文章の「誤字脱字の修正」「自然な日本語へのリライト」「論理展開のブラッシュアップ」を行ってください。変更した箇所と修正理由を表形式で示してください。
-
-対象テキスト：
-【ここに文章】",テキスト生成,"校正, 推敲, ライティング, 添削"
-ニュースレター・メルマガ執筆,【新商品/新サービス名】のローンチに関するメールマガジンを作成してください。読者が思わず開封したくなる件名案を3つ作成し、本文は「共感→課題提示→解決策（商品紹介）→行動喚起(CTA)」の構成にしてください。,テキスト生成,"メルマガ, ライティング, コピーライティング"
-説得力のあるスピーチ原稿作成,【テーマ/イベント名】における5分間のスピーチ原稿を作成してください。聴衆の心を揺さぶるようなストーリーテリングを取り入れ、冒頭の掴み・中盤の具体的エピソード・終盤のメッセージを強調してください。,テキスト生成,"スピーチ, 原稿, プレゼン, 執筆"
-プレスリリース原稿の作成,"以下の情報を元に、メディア向けプレスリリースの標準フォーマットに沿った原稿を作成してください。新奇性・社会的価値が伝わる見出し、本文、会社概要欄を含めてください。
-
-製品名：
-発表内容：
-ターゲット：
-価格・発売日：",テキスト生成,"広報, PR, プレスリリース, ビジネス"
-YouTube動画のスクリプト台本,【動画テーマ】についての10分間のYouTube解説動画の台本を作成してください。「オープニング（0〜30秒で離脱防止）」「本編（3つのポイント）」「エンディング（チャンネル登録誘導）」に分けて、セリフ形式で書いてください。,テキスト生成,"YouTube, 台本, 動画制作, スクリプト"
-小説・ストーリーのプロット生成,【ジャンル（例：SFファンタジー）】の短編小説のプロット案を作成してください。主人公の設定、世界観、起承転結の各章の要約、クライマックスの伏線とその回収方法を明記してください。,テキスト生成,"小説, ストーリー, 創作, アイデア"
-FAQ（よくある質問と回答）の作成,【サービス/商品名】に関して、ユーザーから寄せられそうな想定質問（FAQ）を10個作成し、親切かつ正確な回答文をセットで作成してください。,テキスト生成,"FAQ, カスタマーサポート, 執筆"
-インタビュー質問項目の策定,【インタビュイーの職種/人物像】に対する60分間のインタビュー質問シートを作成してください。アイスブレイクから始まり、キャリアの転機、成功体験、今後の展望まで深掘りできる階層的な質問（大質問・深掘り質問）を用意してください。,テキスト生成,"インタビュー, 質問案, 取材, 記事作成"
-難解な専門用語の解説文作成,「【専門用語】」という概念について、非エンジニアや初心者にも分かるように比喩表現（日常の例え話）を使って説明してください。解説レベルは小学生でもイメージできるレベルにしてください。,テキスト生成,"解説, 初心者向け, 比喩, 教育"
-自己PR・志望動機の作成,"以下の経歴と強みを元に、採用担当者に強くアピールできる「自己PR文（約400文字）」を作成してください。具体エピソード・得られた成果・企業への貢献意欲を含めてください。
-
-職種：
-強み：
-過去のエピソード：",テキスト生成,"就活, 転職, 自己PR, キャリア"
-SNSプロフィール文の最適化,"以下の実績と発信テーマを元に、フォロワーが増えやすいX（旧Twitter）のプロフィール文（160文字以内）を3パターン（実績アピール型・共感型・箇条書き型）作成してください。
-
-実績：
-発信ジャンル：",テキスト生成,"SNS, プロフィール, X, 自己紹介"
-本の要約と要点レビュー作成,書籍「【書籍タイトル】（著者：【著者名】）」の主要な教訓とアクションプランをまとめてください。本から学べる3つの重要コンセプトと、明日から実践できる具体的行動を提案してください。,テキスト生成,"読書メモ, 書評, 要約, 勉強"
-クレームへのお詫び返信メール,【発生したトラブルの内容】について、怒っているお客様に対する謝罪と今後の対応方針を伝える誠実なメール文章を作成してください。相手の心情への配慮、迅速な状況調査の約束、再発防止策を含めてください。,テキスト生成,"メール, 謝罪, カスタマー対応, ビジネス"
-コードのリファクタリング,"以下のコードをより可読性が高く、パフォーマンスの良いモダンなコードにリファクタリングしてください。また、変更点とその理由を初心者にもわかりやすく箇条書きで説明してください。対象コード：
-
-",プログラミング,"エンジニア, リファクタリング, コード解説"
-エラーログの解読とデバッグ手順,"以下のエラーログを分析し、何が原因で発生しているか、どのように修正すればよいかステップバイステップで解説してください。
-
-エラーログ：
-【ここにエラーログを貼り付け】",プログラミング,"デバッグ, エラー, 開発, エンジニア"
-Web APIエンドポイントの設計,【システム/機能名（例: ユーザー管理機能）】に必要なRESTful APIのエンドポイント一覧を設計してください。HTTPメソッド、パス、リクエストボディ（JSON）、レスポンス例、ステータスコードをまとめて表形式で示してください。,プログラミング,"API, システム設計, REST, バックエンド"
-SQLクエリの最適化（チューニング）,"以下のSQLクエリのパフォーマンスを改善したいです。実行速度を向上させるリライト案と、追加すべきインデックスの設定提案をお願いします。
-
-対象クエリ：
-【ここにSQL】",プログラミング,"SQL, データベース, パフォーマンス, 開発"
-JavaScript/TypeScript Unitテスト生成,"以下のJavaScript/TypeScript関数に対するJest（またはVitest）を用いたユニットテストコードを作成してください。正常系テストだけでなく、境界値や異常系エラーのテストケースも含めてください。
-
-対象関数：
-",プログラミング,"テスト, Jest, TypeScript, 品質保証"
-Gitコミットメッセージの作成,"以下のコード修正差分（diff）を元に、Conventional Commitsの規約に則った分かりやすいGitコミットメッセージ（英語および日本語訳）を作成してください。
-
-diff情報：
-",プログラミング,"Git, 開発ツール, チーム開発, バージョン管理"
-正規表現（RegEx）のパターン生成,「【マッチさせたい文字列の条件】」に一致する正規表現を作成してください。パターンの各要素の解説と、テスト用マッチング例（OK例・NG例）も併記してください。,プログラミング,"正規表現, 文字列処理, 開発"
-GraphQLスキーマの定義,【ドメイン・モデル名（例: ECサイトの注文・商品・ユーザー）】を表現するGraphQLスキーマ（SDL形式）を定義してください。Type、Query、Mutation、Enumを適切に含めてください。,プログラミング,"GraphQL, スキーマ, API設計"
-Docker Compose環境の構成ファイル生成,【使用スタック（例: Node.js + PostgreSQL + Redis）】をローカル開発環境でワンコマンドで立ち上げるための \`docker-compose.yml\` ファイルを作成してください。環境変数設定やボリュームマウントも含めてください。,プログラミング,"Docker, インフラ, 開発環境, DevOps"
-Python自動化スクリプトの作成,【処理内容（例: 指定フォルダ内の複数のExcelファイルを読み込み、1つのファイルに統合して集計）】を行うPythonスクリプトを作成してください。エラー処理と進捗表示のログ出力も含めてください。,プログラミング,"Python, 自動化, スクリプト, 業務効率化"
-アルゴリズムの時間・空間複雑度解析,"以下のコード/アルゴリズムについて、時間複雑度（Big-O）および空間複雑度を計算し、なぜその計算量になるのか理由を解説してください。さらに、より計算量を抑えるアイデアがあれば提案してください。
-
-コード：
-",プログラミング,"アルゴリズム, 計算量, データ構造, コーディングテスト"
-CSS/Tailwind UIコンポーネント作成,Tailwind CSSを使用して、【UI要素（例: モーダルダイアログ / ドロップダウンメニュー）】のHTML・CSSコードを作成してください。レスポンシブ対応、ホバー状態のアニメーション、アクセシビリティ（ARIA属性）を配慮してください。,プログラミング,"フロントエンド, Tailwind, UI, CSS"
-OpenAPI (Swagger) 仕様書の生成,"以下の仕様を元に、OpenAPI 3.0形式（YAML）のAPI仕様書を作成してください。
-エンドポイント：
-説明：
-パラメータ：",プログラミング,"OpenAPI, Swagger, ドキュメント, API"
-レガシーコードのドキュメント（JSDoc/Docstring）自動生成,"以下のコードのすべての関数とクラスに、引数・戻り値・副作用・例外処理を明記した詳細なドキュメントコメント（JSDocまたはDocstring）を付与してください。
-
-",プログラミング,"ドキュメント, JSDoc, 可読性, リファクタリング"
-CRON式（定期実行スケジュール）の生成,「【実行したいスケジュール（例: 毎月第1月曜日の午前9時30分）】」を表すCRON式を作成してください。各フィールド（分・時・日・月・曜日）の意味を説明し、次回の実行日時例を示してください。,プログラミング,"CRON, バッチ処理, サーバー, 自動化"
-ビジネス英語メールの添削,"以下の英文メールを、ビジネスシーン（クライアントへの謝罪と代替案の提示）に適した、丁寧かつプロフェッショナルで自然な表現に添削してください。添削前の英文：
-
-",ビジネス,"英語, メール, 添削, ビジネス"
-会議議事録の構造化サマリー,"以下の発言メモから、決定事項・保留事項・ToDo（担当者と期限）・次回アジェンダを整理した見やすい会議議事録を作成してください。
-
-会議メモ：
-",ビジネス,"議事録, 会議, 業務効率化, ビジネス"
-企画提案書のアウトライン（目次）構成,【新プロジェクト/新規施策案】を経営陣にプレゼンするための企画提案書のアウトラインを作成してください。「背景と課題」「提案内容」「期待されるROI・効果」「実行スケジュール」「予算・体制」の各章で述べるべきキーメッセージを提示してください。,ビジネス,"企画書, プレゼン, 社内提案, 資料作成"
-エレベーターピッチ（30秒自己紹介・提案）,【商品/サービスの概要】について、投資家や見込み客に対して30秒（約150文字）で関心を引くエレベーターピッチを作成してください。フック（興味付け）→解決する課題→自社の強み→Call to Actionを含めてください。,ビジネス,"ピッチ, 営業, プレゼン, スタートアップ"
-難航している価格交渉のアドバイス・返信文,取引先から【現状価格】から【希望値引き価格】への値下げ要求を受けています。安易な値引きに応じず、価値をアピールしながら関係性を維持し、代替案（発注量増加や契約期間延長によるメリット提示）を提案する角の立たない返信メールを作成してください。,ビジネス,"交渉, 営業, 価格設定, メール"
-退職・転職のご挨拶メール作成,社外の取引先各位に向けた、最終出社日の退職挨拶メールを作成してください。感謝の気持ち、引き継ぎ担当者の連絡先、今後の連絡先、今後の発展を祈る言葉を含め、失礼のないフォーマルな文面にしてください。,ビジネス,"メール, マナー, 退職挨拶, ビジネス"
-新入社員向けOJT研修プログラム設計,【職種（例: Webエンジニア / インサイドセールス）】の未経験新入社員を対象とした、最初の3ヶ月間のOJT研修ロードマップを作成してください。月ごとの目標、具体的な学習タスク、評価指標（KPI）を盛り込んでください。,ビジネス,"人事, 研修, OJT, 人材育成"
-週次業務報告書（週報）の作成,"今週の業務成果と来週の予定を上司に報告する週報を作成してください。「今週の目標と達成率」「主な成果」「直面した課題と改善策」「来週の優先タスク」の項目で整理してください。
-
-今週の作業メモ：
-",ビジネス,"週報, 業務報告, タスク管理, ビジネス"
-社内チャット（Slack/Teams）での丁寧な依頼文,他部署の【担当者名】さんに対して、【依頼したい内容】を社内チャット（Slack等）で依頼する文章を作成してください。相手の業務への配慮、背景の説明、提出期限、返信の要否をコンパクトに伝えてください。,ビジネス,"Slack, コミュニケーション, 依頼, 業務効率化"
-SWOT分析（強み・弱み・機会・脅威）のフレームワーク適用,"【自社または特定の事業/商品】について、SWOT分析を実行してください。内部環境（Strengths, Weaknesses）と外部環境（Opportunities, Threats）を洗い出し、さらにそれらを掛け合わせたクロスSWOT（攻撃・防衛戦略）を提案してください。",ビジネス,"SWOT分析, フレームワーク, 経営戦略, ビジネス"
-業務フローの標準化・マニュアル化（SOP）,【自動化・標準化したい業務（例: 経費精算の手順）】の作業手順書（SOP）を作成してください。前提条件、使用ツール、ステップごとの具体的な操作手順、注意点・よくあるミスを一覧化してください。,ビジネス,"マニュアル, SOP, 業務改善, 標準化"
-アンケート調査票の設問作成,【調査目的（例: 新サービス利用後の顧客満足度調査）】のためのアンケート設問（全8〜10問）を作成してください。単一選択、複数選択、NPS（推奨度）、自由記述をバランスよく配置してください。,ビジネス,"アンケート, 顧客調査, リサーチ, マーケティング"
-採用面接の構造化質問と評価ルーブリック,【採用ポジション（例: シニアマーケター）】に応募してきた候補者の「課題解決力」と「カルチャーフィット」を見極めるための構造化面接質問5選と、回答の良し悪しを判断する5段階の評価基準（ルーブリック）を作成してください。,ビジネス,"採用, 面接, 人事, 評価基準"
-1on1ミーティングのアジェンダ設定,部下のモチベーション向上とキャリア支援を目的とした30分間の1on1ミーティングのアジェンダを作成してください。「近況・コンディション確認」「業務の進捗・困りごと」「中長期キャリア・学び」「フィードバック・アクションプラン」の時間配分と問いかけのフレーズを用意してください。,ビジネス,"1on1, マネジメント, リーダーシップ, 人事"
-プロジェクトのリス管理表（リスクレジスター）,【プロジェクト概要】において想定される潜在的リスクを5つ挙げ、それぞれのリスクの影響度・発生確率・未然防止策・発生時の対処プラン（コンティンジェンシープラン）を表形式で整理してください。,ビジネス,"リスク管理, プロジェクトマネジメント, PM, ビジネス"
-新規事業のアイデア壁打ち,"私は現在新しいWebサービスのアイデアを考えています。以下の【ターゲット層】と【課題】を元に、解決策となる斬新でマネタイズ可能なアイデアを5つ提案してください。それぞれに「サービス名」「概要」「想定される収益モデル」を含めてください。
-ターゲット層：
-課題：",企画・アイデア,"壁打ち, ブレスト, 企画, 新規事業"
-ネーミング・サービス名の発案,【商品・サービスの特徴とコンセプト】に合う魅力的なサービス名のアイデアを15個提案してください。バリエーションとして「キャッチー系」「英語・造語系」「和風・シンプル系」「エモーショナル系」に分類してください。,企画・アイデア,"ネーミング, ブランディング, 発想, アイデア"
-SCAMPER法によるアイデアの掛け合わせ,"既存の製品「【製品名（例: 傘）】」に対して、SCAMPER法（Substitute, Combine, Adapt, Modify, Put to other uses, Eliminate, Reverse）を適用し、これまでにない革新的な新しい製品アイデアを7つ発想してください。",企画・アイデア,"SCAMPER, 発想手法, イノベーション, ブレスト"
-ターゲットペルソナの詳細定義,【ターゲットとなる商品/サービス】のマーケティング用ターゲットペルソナを1人作成してください。名前、年齢、職業、年収、価値観、日々のルーティン、抱えている最大の悩み（痛点）、購買決定要因を詳細にストーリー仕立てで描いてください。,企画・アイデア,"ペルソナ, ターゲット, 顧客理解, マーケティング"
-季節イベント・キャンペーンの企画立案,【自社ジャンル/お店】における【季節/イベント（例: 夏休み・ハロウィン・年末年始）】に向けた集客キャンペーン施策を3つ提案してください。施策内容、ターゲットのインサイト、参加インセンティブ、期待されるSNS拡散効果を記載してください。,企画・アイデア,"キャンペーン, イベント, 販促, 企画"
-UXカスタマージャーニーマップの作成,ユーザーが【サービス名】を知ってから購入・リピートするまでのカスタマージャーニーマップを作成してください。「認知」「検討」「購入」「利用」「ファン化」の各フェーズにおけるユーザー行動、思考・感情、接触チャネル、提供すべき体験を整理してください。,企画・アイデア,"UX, カスタマージャーニー, 顧客体験, サービスデザイン"
-YouTube/TikTokの動画企画・テーマ10選,【チャンネルのテーマ/対象読者】向けのショート動画（TikTok/Reels/Shorts）の企画案を10個作成してください。視聴者が1秒でスクロールを止めるフックになるタイトルと、動画のオチ・メッセージを添えてください。,企画・アイデア,"動画企画, TikTok, YouTube, バズ"
-ゲーミフィケーション要素の取り入れアイデア,【既存のサービスや習慣化したいアプリ】にユーザーが夢中になるゲーミフィケーション要素（ポイント・バッジ・レベル・ランキング・クエストなど）を組み込む改善アイデアを4つ提案してください。,企画・アイデア,"ゲーミフィケーション, ユーザーエンゲージメント, アプリ企画"
-ビジネスモデルキャンバス（BMC）の作成,【ビジネスアイデア】について、ビジネスモデルキャンバスの9つの要素（顧客セグメント、価値提案、チャネル、顧客との関係、収益の流れ、主要リソース、主要活動、主要パートナー、コスト構造）を整理してください。,企画・アイデア,"ビジネスモデル, スタートアップ, 経営企画"
-Podcast/ラジオ番組のコーナー企画,【番組テーマ/ターゲット】のポッドキャスト番組における、リスナー参加型の人気定番コーナー企画を5つ作成してください。コーナー名、趣旨、投稿テーマの具体例を記載してください。,企画・アイデア,"ポッドキャスト, ラジオ, 企画, エンタメ"
-コミュニティイベントの氷解ワーク（アイスブレイク）案,初対面の参加者20名が集まる【イベントのテーマ】において、会場を一瞬で和ませ相互理解を深めるおすすめのアイスブレイクゲームを3つ提案してください。所要時間、必要な準備、進行手順をまとめてください。,企画・アイデア,"アイスブレイク, ワークショップ, コミュニティ, イベント"
-アップセル・クロスセル施策の提案,【既存サービス（例: 月額SaaSプラン）】を利用中の既存顧客に対して、上位プランへの移行（アップセル）や関連オプションの購入（クロスセル）を促すためのアプローチ施策とタイミングを3つ提案してください。,企画・アイデア,"LTV, 収益化, カスタマーサクセス, 営業企画"
-地方創生・地域活性化のアイデア,【地域の特産品や観光資源】を活用した、若年層やインバウンド観光客を呼び込むための地域活性化プロジェクト企画案を作成してください。ストーリー性のあるコンセプトと体験型コンテンツのアイデアを含めてください。,企画・アイデア,"地方創生, 地域活性化, 観光, 企画"
-オウンドメディアのコンテンツカレンダー案,【ターゲット読者と目的】を持つオウンドメディアの、今後1ヶ月分（週2回公開・計8本）の記事テーマと狙う検索キーワード、想定されるコンバージョン（読者の次の行動）の一覧表を作成してください。,企画・アイデア,"オウンドメディア, コンテンツマーケティング, 企画"
-社内ハッカソン・アイデアソンのお題決定,【自社の事業領域・保有技術】を活用した社内ハッカソンを開催します。社員の創造性を刺激し、実装可能性が高く社会課題解決につながるテーマお題（テーマソング的フレーズ）を5パターン提案してください。,企画・アイデア,"ハッカソン, イノベーション, 社内イベント"
-SNS用の短文キャッチコピー,"以下の製品特徴を元に、X（旧Twitter）で拡散されやすい、思わずタップしたくなるようなキャッチコピーを3パターン（直球系、共感系、意外性系）作成してください。
-製品特徴：",マーケティング,"SNS, キャッチコピー, マーケティング"
-ランディングページ（LP）のファーストビュー文章構成,【商品・サービス名】のLPファーストビュー（最上部）の構成を作成してください。「メインキャッチコピー」「サブキャッチコピー」「権威性・実績」「アクションボタン（CTAテキスト）」を提案してください。,マーケティング,"LP, 成約率UP, Webデザイン, コピーライティング"
-Meta（Instagram/Facebook）広告のテキストとクリエイティブ案,【ターゲット層】向けに【商品名】を宣伝するInstagramフィード広告の広告文案を3パターン（悩み解決型・ベネフィット強調型・口コミ体験談型）作成してください。それぞれの画像/動画クリエイティブの指示書も付けてください。,マーケティング,"Web広告, Meta広告, Instagram, 集客"
-SEOキーワードのクラスタリングと記事グループ化,「【メインキーワード（例: 転職）】」に関連するロングテールキーワード群を抽出し、検索意図ごとにカテゴリー分類（キーワードクラスタ）してください。それぞれのクラスターで執筆すべき記事タイトル案を提示してください。,マーケティング,"SEO, キーワードリサーチ, コンテンツ施策"
-Google検索広告（KW/見出し/説明文）の作成,【提供サービス】に関するGoogleレスポンシブ検索広告の入稿アセットを作成してください。「検索キーワード（マッチタイプ指定）」「見出し（15文字以内×10本）」「説明文（90文字以内×4本）」を用意してください。,マーケティング,"リスティング広告, Google広告, 運用型広告"
-Instagramアカウントの運用世界観・投稿テンプレート,【ジャンル（例: 丁寧な暮らし・韓国風インテリア）】のInstagramアカウントのブランディング設計を作成してください。投稿の配色テーマ、フォントの方向性、表紙画像のレイアウト構成、キャプションの締めくくり定型文を定めてください。,マーケティング,"Instagram, SNS運用, ブランディング"
-BtoBホワイトペーパーの企画・構成案,【自社ソリューション】のリード獲得（資料請求）を目的としたホワイトペーパーの目次構成案を作成してください。顧客の抱える課題提起から業界動向データ、解決アプローチ、自社事例紹介までのストーリーラインを組み立ててください。,マーケティング,"ホワイトペーパー, BtoB, リード獲得, マーケティング"
-口コミ・レビュー促進のサンクスカード文面,商品購入者に同梱するサンクスカード（お礼状）の文章を作成してください。購入への感謝を伝え、GoogleマップやECサイトへの高評価レビュー投稿を優しく促す（特典案内つき）文面にしてください。,マーケティング,"口コミ, CRM, レビュー, 顧客満足"
-競合他社比較表（ポジショニングマップ）の整理,【自社サービス名】と【競合A社】【競合B社】の比較表を作成してください。価格、機能、サポート体制、ターゲット層、強み・弱みの項目で比較し、自社の差別化ポイント（USP）を際立たせてください。,マーケティング,"競合分析, ポジショニング, USP, 戦略"
-インフルエンサーマーケティングの打診DM文面,【自社ブランド】のPR案件を依頼したいギフティング/PR用インフルエンサーへのInstagramダイレクトメッセージ（DM）を作成してください。アカウントへの褒め言葉、PR依頼の条件、提供商品、報酬、返信期限を礼儀正しく簡潔に記述してください。,マーケティング,"インフルエンサー, DM, PR, 営業"
-休眠顧客への掘り起こしリターゲティングメール,過去6ヶ月間購入やログインがない休眠ユーザーに対して、再利用を促す「おかえりなさいキャンペーン」メールを作成してください。限定クーポンや新機能の紹介を盛り込み、開封率を高める件名案も添えてください。,マーケティング,"リターゲティング, メルマガ, 休眠顧客, CRM"
-TikTok/Xで流行するミーム・ハッシュタグ活用施策,現在トレンドとなっている【Z世代に人気のアクション/音源/構図】を取り入れて、自社商品「【商品名】」を自然にPRする親しみやすいバズ投稿のアイデアを2案作成してください。,マーケティング,"SNS, トレンド, Z世代, バズ"
-A/Bテストの検証仮説とバリエーション作成,"【現行のボタンテキストやコピー】のコンバージョン率（CVR）を上げるためのA/Bテスト計画を作成してください。現行案（Control）に対する変更案（Variant A, Variant B）と、なぜその変更でCVRが上がると予想するか仮説を記述してください。",マーケティング,"ABテスト, CVR改善, グロースハック, CRO"
-プレスリリース後のSNS拡散用投稿文セット,新発表「【プレスリリース題目】」の公開に合わせて、X（Twitter）、LinkedIn、Facebookに投稿するソーシャル投稿文をそれぞれのSNSの文化・文字数・トーンに合わせて書き分けてください。,マーケティング,"広報, SNS連動, PR, クロスポスト"
-商品パッケージのキャッチコピー・裏面説明文,店頭の棚でパッと目を引く【食品/コスメ製品】のパッケージ表面のメインコピー（10文字以内）と、裏面に記載する情熱的なストーリー説明文（150文字程度）を作成してください。,マーケティング,"パッケージ, キャッチコピー, 商品開発"
-5歳児でもわかる言葉での概念説明,「【複雑な概念（例: 量子力学 / ブロックチェーン / インフレ）】」について、5歳の子どもに読み聞かせるおとぎ話のようなストーリーを使ってわかりやすく説明してください。,学習・教育,"教育, わかりやすい説明, 子ども向け, 概念理解"
-英会話フレーズとシチュエーション対話練習,【海外旅行の状況（例: レストランで注文を変更したい時）】で使える自然なネイティブの英語フレーズ5選と、店員との役対話（ロールプレイ）スクリプトを作成してください。発音のコツや日本語訳も付けてください。,学習・教育,"英語学習, 英会話, 海外旅行, ロールプレイ"
-資格試験に向けた効率的学習スケジュール作成,【資格名（例: 基本情報技術者試験 / 宅建）】に【残り日数（例: 3ヶ月）】で合格するための週単位の学習計画表を作成してください。テキストインプット、過去問演習、直前模試のバランスと復習のサイクルを組み込んでください。,学習・教育,"資格試験, 勉強法, 計画表, 学習効率"
-オリジナル確認クイズ（4択問題）の自動生成,「【学習テーマ（例: 日本史の明治維新）】」に関する知識を確認するための4択クイズを5問作成してください。各問題に正解、不正解選択肢の解説、難易度（初級・中級・上級）を明記してください。,学習・教育,"クイズ, テスト作成, 学習, 復習"
-読書・論文チェック用の質問テンプレート,専門書や学術論文を読む際に、内容を深く理解し自分の血肉にするための「Active Reading（能動的読書）用チェックリスト10選」を作成してください。,学習・教育,"読書術, 論文, 思考法, 勉強"
-1週間の時短献立と買い物リスト作成,一人暮らし向けの「1食200円以下・調理時間15分以内・栄養バランスの良い平日5日分の夕食献立」と、週末にスーパーで買うべき食材の買い物リストをまとめて作成してください。,ライフハック,"時短, 料理, 節約, 生活"
-旅行のタイムスケジュールと持ち物チェックリスト,【目的地（例: 京都2泊3日）】への旅行計画を作成してください。主要観光スポットを効率よく巡るモデルコース（時間刻み）、ローカルグルメの提案、絶対忘れてはいけない持ち物チェックリストを記載してください。,ライフハック,"旅行, 観光, スケジュール, ライフハック"
-習慣化のための「If-Thenプランニング」設計,「【身につけたい習慣（例: 毎朝10分のストレッチ）】」が三日坊主にならず毎日続くように、トリガーと行動をセットにしたIf-Thenプラン（「もしXしたら、Yする」）を5パターン作成してください。,ライフハック,"習慣化, 自己改善, 生産性, メンタル"
-部屋の断捨離・片付けアクションプラン,モノであふれた【部屋（例: クローゼット / デスク周り）】を1週末でスッキリ片付けるための「捨て基準ルール」と「3ステップ片付けワークフロー」を作成してください。,ライフハック,"片付け, 断捨離, 整理整頓, ライフハック"
-目標達成のためのポモドーロ・テクニック作業設計,【今日終わらせたい大タスク】を、25分集中＋5分休憩の「ポモドーロ・テクニック」のコマ（ポモ）に細分化した作業スケジュールを作成してください。途中で集中が切れない工夫も教えてください。,ライフハック,"タイムマネジメント, ポモドーロ, 集中力, タスク管理"`;
-
-  async function loadCSV(){
-    try {
-      const res=await fetch('./prompts.csv');
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      const text=await res.text();
-      allPrompts=parseCSV(text);
-    } catch(err){
-      console.info('fetch failed, using inline data:', err.message);
-      allPrompts=parseCSV(INLINE_CSV);
-    }
-    loadingEl.classList.add('hidden');
-    buildFilters(allPrompts);
-    renderAll();
-  }
-
-  loadCSV();
+  // 初回起動
+  buildFilters(allPrompts);
+  renderAll();
 })();
 </script>
 </body>
