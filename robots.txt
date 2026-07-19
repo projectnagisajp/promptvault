@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://projectnagisajp.github.io/promptvault/sitemap.xml
